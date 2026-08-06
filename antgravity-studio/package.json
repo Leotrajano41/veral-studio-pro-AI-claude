@@ -1,0 +1,27 @@
+{
+  "name": "antgravity-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AntGravity Studio - Monorepo for Mobile, Backend, Web, and Docs",
+  "workspaces": [
+    "mobile",
+    "backend",
+    "web"
+  ],
+  "scripts": {
+    "start:mobile": "npm run start --prefix mobile",
+    "start:backend": "npm run start --prefix backend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:web": "npm run dev --prefix web",
+    "build:web": "npm run build --prefix web"
+  },
+  "keywords": [
+    "antgravity-studio",
+    "monorepo",
+    "expo",
+    "express",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "MIT"
+}

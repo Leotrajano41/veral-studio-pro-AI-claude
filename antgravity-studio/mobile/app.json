@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "AntGravity Studio",
+    "slug": "antgravity-studio",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0F19"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.antgravity.studio"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0F19"
+      },
+      "package": "com.antgravity.studio"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
