@@ -1,60 +1,44 @@
-import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import APIConfigForm from '../components/forms/APIConfigForm';
+import SettingsForm from '../components/forms/SettingsForm';
+import Card from '../components/common/Card';
+import Button from '../components/common/Button';
+import Input from '../components/common/Input';
+import { LogOut, User, Mail, Upload } from 'lucide-react';
 
 export default function Settings() {
-  const [openaiKey, setOpenaiKey] = useState('');
-  const [googleKey, setGoogleKey] = useState('');
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    alert('Configurações salvas com sucesso!');
-  };
-
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Configurações do Sistema</h1>
-          <p className="text-sm text-gray-400">Gerencie suas chaves de API e preferências</p>
+          <h1 className="text-2xl font-bold text-txt-primary">Configurações</h1>
+          <p className="text-sm text-txt-secondary">Gerencie chaves de API, preferências e perfil</p>
         </div>
 
-        <form onSubmit={handleSave} className="bg-cardBg border border-cardBorder rounded-xl p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-white">Chaves de API</h2>
+        <APIConfigForm />
+        <SettingsForm />
 
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">OpenAI API Key</label>
-            <input
-              type="password"
-              value={openaiKey}
-              onChange={(e) => setOpenaiKey(e.target.value)}
-              placeholder="sk-..."
-              className="w-full bg-background border border-cardBorder rounded-lg p-3 text-white focus:outline-none focus:border-primary"
-            />
+        <Card title="Perfil do Usuário">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-16 h-16 rounded-full bg-accent-red/10 border-2 border-accent-red/30 flex items-center justify-center">
+                <User size={28} className="text-accent-red" />
+              </div>
+              <button className="text-xs text-accent-teal hover:underline flex items-center gap-1"><Upload size={12} /> Alterar avatar</button>
+            </div>
+            <Input label="Nome" placeholder="Seu nome completo" defaultValue="Leonardo Trajano" />
+            <Input label="Email" type="email" placeholder="email@exemplo.com" defaultValue="leonardo@antgravity.studio" />
           </div>
-
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Google Cloud API Key</label>
-            <input
-              type="password"
-              value={googleKey}
-              onChange={(e) => setGoogleKey(e.target.value)}
-              placeholder="AIza..."
-              className="w-full bg-background border border-cardBorder rounded-lg p-3 text-white focus:outline-none focus:border-primary"
-            />
+          <div className="mt-6">
+            <Button variant="primary" size="sm">Salvar Perfil</Button>
           </div>
+        </Card>
 
-          <button type="submit" className="bg-primary hover:bg-primaryHover text-white px-6 py-2.5 rounded-lg font-medium transition">
-            Salvar Chaves
-          </button>
-        </form>
-
-        <div className="bg-cardBg border border-cardBorder rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-2">Perfil do Usuário</h2>
-          <p className="text-sm text-gray-400 mb-4">Conectado como: user@antgravity.studio</p>
-          <button className="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-4 py-2 rounded-lg text-sm font-medium transition">
-            Encerrar Sessão
-          </button>
-        </div>
+        <Card>
+          <Button variant="danger" className="w-full">
+            <LogOut size={16} /> Encerrar Sessão
+          </Button>
+        </Card>
       </div>
     </Layout>
   );

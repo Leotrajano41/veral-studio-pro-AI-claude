@@ -1,104 +1,56 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
-import ProjectCard from '../components/ProjectCard';
+import ProjectGrid from '../components/projects/ProjectGrid';
+import ProjectFilters from '../components/projects/ProjectFilters';
+import NewProjectModal from '../components/projects/NewProjectModal';
+import Button from '../components/common/Button';
+import { Plus } from 'lucide-react';
 
-const mockProjects = [
-  { id: '1', name: 'Curiosidades do Espaço', niche: 'Ciência', createdAt: new Date().toISOString() },
-  { id: '2', name: 'Dicas de Finanças Pessoais', niche: 'Finanças', createdAt: new Date().toISOString() },
-  { id: '3', name: 'Receitas Rápidas 1 Minuto', niche: 'Culinária', createdAt: new Date().toISOString() },
+const seed = [
+  { id: '1', name: 'Canal Espacial', niche: 'education', videoCount: 12, createdAt: '2026-07-01T10:00:00Z' },
+  { id: '2', name: 'FinanceHub', niche: 'finance', videoCount: 8, createdAt: '2026-07-10T14:30:00Z' },
+  { id: '3', name: 'GamerFlix', niche: 'games', videoCount: 24, createdAt: '2026-06-15T09:00:00Z' },
+  { id: '4', name: 'Receitas Express', niche: 'food', videoCount: 5, createdAt: '2026-07-22T12:00:00Z' },
+  { id: '5', name: 'FitPulse', niche: 'fitness', videoCount: 15, createdAt: '2026-08-01T08:00:00Z' },
+  { id: '6', name: 'TechBites', niche: 'entertainment', videoCount: 3, createdAt: '2026-08-03T16:00:00Z' },
 ];
 
 export default function Projects() {
-  const [projects, setProjects] = useState(mockProjects);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [niche, setNiche] = useState('Finanças');
+  const [projects, setProjects] = useState(seed);
+  const [filter, setFilter] = useState('all');
+  const [modal, setModal] = useState(false);
+
+  const filtered = filter === 'all' ? projects : projects.filter((p) => p.niche === filter);
 
   const handleDelete = (id) => {
-    setProjects(projects.filter((p) => p.id !== id));
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+    toast.success('Projeto removido.');
   };
 
-  const handleCreate = (e) => {
-    e.preventDefault();
-    if (!name) return;
-    const newProject = {
-      id: Date.now().toString(),
-      name,
-      niche,
-      createdAt: new Date().toISOString(),
-    };
-    setProjects([newProject, ...projects]);
-    setName('');
-    setIsModalOpen(false);
+  const handleCreate = (data) => {
+    const newP = { id: Date.now().toString(), ...data, videoCount: 0, createdAt: new Date().toISOString() };
+    setProjects((prev) => [newP, ...prev]);
+    toast.success('Projeto criado!');
   };
 
   return (
     <Layout>
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Meus Projetos</h1>
-          <p className="text-sm text-gray-400">Gerencie seus canais e ideias de vídeos</p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-medium transition"
-        >
-          + Novo Projeto
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} onDelete={handleDelete} />
-        ))}
-      </div>
-
-      {/* Modal Criar Projeto */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-cardBg border border-cardBorder p-6 rounded-xl w-full max-w-md">
-            <h2 className="text-xl font-bold text-white mb-4">Criar Novo Projeto</h2>
-            <form onSubmit={handleCreate} className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Nome do Projeto</label>
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-background border border-cardBorder rounded-lg p-2.5 text-white focus:outline-none focus:border-primary"
-                  placeholder="Ex: Canal de Curiosidades"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Nicho</label>
-                <select
-                  value={niche}
-                  onChange={(e) => setNiche(e.target.value)}
-                  className="w-full bg-background border border-cardBorder rounded-lg p-2.5 text-white focus:outline-none focus:border-primary"
-                >
-                  <option value="Finanças">Finanças</option>
-                  <option value="Ciência">Ciência</option>
-                  <option value="Culinária">Culinária</option>
-                  <option value="Tecnologia">Tecnologia</option>
-                </select>
-              </div>
-              <div className="flex justify-end gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-gray-400 hover:text-white"
-                >
-                  Cancelar
-                </button>
-                <button type="submit" className="bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-lg font-medium">
-                  Salvar
-                </button>
-              </div>
-            </form>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-txt-primary">Meus Projetos</h1>
+            <p className="text-sm text-txt-secondary">{projects.length} projetos cadastrados</p>
           </div>
+          <Button variant="primary" size="md" onClick={() => setModal(true)}>
+            <Plus size={16} /> Novo Projeto
+          </Button>
         </div>
-      )}
+
+        <ProjectFilters active={filter} onChange={setFilter} />
+        <ProjectGrid projects={filtered} onDelete={handleDelete} />
+        <NewProjectModal isOpen={modal} onClose={() => setModal(false)} onSave={handleCreate} />
+      </div>
     </Layout>
   );
 }
