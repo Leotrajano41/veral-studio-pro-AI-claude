@@ -4,6 +4,7 @@ import Button from '../shared/Button';
 import FormField from '../shared/FormField';
 import Dropdown from '../shared/Dropdown';
 import { Search, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const SOURCES = ['📷 Pixabay', '📸 Pexels', 'All (todas)'];
 const TYPES = ['Ambas', 'Vídeos', 'Imagens'];
@@ -22,6 +23,14 @@ export default function MediaSearch({
   onOrientationChange,
   onSearch,
 }) {
+  const handleValidateAndSearch = () => {
+    if (!query || query.trim().length < 3) {
+      toast.error('❌ Campo obrigatório: Digite um termo de mídia com no mínimo 3 caracteres!');
+      return;
+    }
+    onSearch();
+  };
+
   return (
     <Card title="🔍 Buscar Mídia Stock" subtitle="Pesquise mídias em altíssima resolução nos bancos de dados integrados Pixabay e Pexels">
       <div className="space-y-4">
@@ -29,10 +38,11 @@ export default function MediaSearch({
         <div className="space-y-2">
           <FormField
             label="Buscar mídia *"
+            required
             placeholder="Ex: carro vermelho, praia, natureza..."
             value={query}
             onChange={e => onQueryChange(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && onSearch()}
+            onKeyDown={e => e.key === 'Enter' && handleValidateAndSearch()}
           />
 
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -78,7 +88,7 @@ export default function MediaSearch({
             <Button
               variant="primary"
               className="w-full"
-              onClick={() => onSearch()}
+              onClick={handleValidateAndSearch}
               loading={loading}
               ariaLabel="Buscar mídias"
             >

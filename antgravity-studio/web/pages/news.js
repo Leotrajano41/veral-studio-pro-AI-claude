@@ -33,13 +33,12 @@ const INITIAL_CHANNELS = [
 ];
 
 export default function NewsPage() {
-  const [activeTab, setActiveTab] = useState('search'); // 'search' | 'channels' | 'pauta' | 'config'
+  const [activeTab, setActiveTab] = useState('search');
   const [channels, setChannels] = useState(INITIAL_CHANNELS);
   const [activeChannelId, setActiveChannelId] = useState('ch1');
 
   const activeChannel = channels.find(c => c.id === activeChannelId) || channels[0];
 
-  // Actions
   const handleAddToPautaFromSearch = (newsItem) => {
     const newItem = {
       id: String(Date.now()),
@@ -95,7 +94,7 @@ export default function NewsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Newspaper size={24} className="text-[#FF6B6B]" /> Módulo Notícias
+              <Newspaper size={24} className="text-[#FF6B6B]" /> 📰 Notícias
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               Busque notícias em tempo real, gerencie pautas e produza vídeos jornalísticos automáticos

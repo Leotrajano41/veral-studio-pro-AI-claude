@@ -5,6 +5,7 @@ import FormField from '../shared/FormField';
 import Dropdown from '../shared/Dropdown';
 import Textarea from '../shared/Textarea';
 import { Search, Flame, History, Trash2, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const SOURCES = [
   '▶️ YouTube (vídeos)',
@@ -42,7 +43,13 @@ export default function TrendSearch({
   onHotTrends,
   onClearHistory,
 }) {
-  const [showHistory, setShowHistory] = useState(false);
+  const handleValidateAndSearch = () => {
+    if (!query || query.trim().length < 3) {
+      toast.error('❌ Campo obrigatório: Digite um tema/material com no mínimo 3 caracteres!');
+      return;
+    }
+    onSearch();
+  };
 
   return (
     <Card title="🔍 Buscar Tema / Material" subtitle="Consulte as maiores fontes de dados em tempo real para encontrar temas de alto interesse">
@@ -50,12 +57,12 @@ export default function TrendSearch({
         {/* Input de Busca + Histórico */}
         <div className="relative">
           <FormField
-            label="Buscar tema / material"
+            label="Buscar tema / material *"
+            required
             placeholder="Ex: GTA VI novidades, Eleições 2026, Investimentos..."
             value={query}
             onChange={e => onQueryChange(e.target.value)}
-            onFocus={() => setShowHistory(true)}
-            onKeyDown={e => e.key === 'Enter' && onSearch()}
+            onKeyDown={e => e.key === 'Enter' && handleValidateAndSearch()}
           />
 
           {/* Tag Suggestions do Histórico */}
@@ -111,7 +118,7 @@ export default function TrendSearch({
             <Button
               variant="primary"
               className="w-full"
-              onClick={() => onSearch()}
+              onClick={handleValidateAndSearch}
               loading={loading}
               ariaLabel="Buscar tendências"
             >
