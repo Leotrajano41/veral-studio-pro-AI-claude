@@ -22,7 +22,7 @@ export default function ScriptsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ScrollText size={24} className="text-[#FF6B6B]" /> 📝 Roteiros
+              <ScrollText size={24} className="text-[#6366F1]" /> 📝 Roteiros
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               Gere roteiros virais e persuasivos usando Inteligência Artificial

@@ -31,7 +31,7 @@ export default function ThumbnailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ImageIcon size={24} className="text-[#FF6B6B]" /> 🖼️ Thumbnail
+              <ImageIcon size={24} className="text-[#6366F1]" /> 🖼️ Thumbnail
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               Gere capas virais automáticas para seus vídeos do YouTube usando modelos de IA generativa e testes A/B

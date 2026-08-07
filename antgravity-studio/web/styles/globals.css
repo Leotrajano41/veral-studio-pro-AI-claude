@@ -17,8 +17,8 @@
   }
 
   body {
-    background-color: #1a1a1a;
-    color: #FFFFFF;
+    background-color: #0F172A;
+    color: #F8FAFC;
     font-family: 'Inter', 'Segoe UI', sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -38,12 +38,12 @@
 
   /* Accessibility focus visible state */
   :focus-visible {
-    outline: 2px solid #FF6B6B;
+    outline: 2px solid #6366F1;
     outline-offset: 2px;
   }
 
   ::selection {
-    background-color: rgba(255, 107, 107, 0.35);
+    background-color: rgba(99, 102, 241, 0.4);
     color: #ffffff;
   }
 
@@ -52,32 +52,32 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #0F172A;
   }
   ::-webkit-scrollbar-thumb {
-    background: #444444;
+    background: #334155;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #666666;
+    background: #475569;
   }
 }
 
 /* Mobile responsive safeguards */
 @media (max-width: 640px) {
   input, select, textarea {
-    font-size: 16px !important; /* Prevents automatic iOS Safari zoom */
+    font-size: 16px !important;
   }
 
   button {
-    min-height: 44px; /* Touch target minimum height */
+    min-height: 44px;
   }
 }
 
 /* Custom Spinner Animation */
 .spinner {
   border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top: 3px solid #FF6B6B;
+  border-top: 3px solid #6366F1;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -103,5 +103,5 @@
 }
 
 .text-shadow-neon {
-  text-shadow: 0 0 10px rgba(255, 107, 107, 0.8), 0 0 20px rgba(167, 139, 250, 0.6);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.8), 0 0 20px rgba(139, 92, 246, 0.6);
 }

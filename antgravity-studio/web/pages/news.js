@@ -94,7 +94,7 @@ export default function NewsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Newspaper size={24} className="text-[#FF6B6B]" /> 📰 Notícias
+              <Newspaper size={24} className="text-[#6366F1]" /> 📰 Notícias
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               Busque notícias em tempo real, gerencie pautas e produza vídeos jornalísticos automáticos
@@ -104,7 +104,7 @@ export default function NewsPage() {
         </div>
 
         {/* ── NAVEGAÇÃO POR ABAS (4 Abas) ── */}
-        <div className="flex gap-1 bg-[#2a2a2a] p-1 rounded-card border border-[#444444] overflow-x-auto">
+        <div className="flex gap-1 bg-[#1E293B] p-1 rounded-card border border-[#334155] overflow-x-auto">
           {[
             { id: 'search', label: '🔍 1. Buscar Notícias' },
             { id: 'channels', label: `📺 2. Canais (${channels.length})` },
@@ -114,7 +114,7 @@ export default function NewsPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-3 py-2 rounded text-xs font-semibold whitespace-nowrap transition duration-150 ${activeTab === tab.id ? 'bg-[#FF6B6B] text-white shadow-glow' : 'text-[#B0B0B0] hover:text-white hover:bg-[#333333]'}`}
+              className={`flex-1 px-3 py-2 rounded text-xs font-semibold whitespace-nowrap transition duration-150 ${activeTab === tab.id ? 'bg-[#6366F1] text-white shadow-glow' : 'text-[#94A3B8] hover:text-white hover:bg-[#334155]'}`}
             >
               {tab.label}
             </button>

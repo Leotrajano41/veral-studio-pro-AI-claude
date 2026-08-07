@@ -3,9 +3,9 @@ import { cn } from '../../lib/utils';
 import { Loader2 } from 'lucide-react';
 
 const VARIANTS = {
-  primary: 'bg-[#FF6B6B] hover:bg-[#FF5252] text-white shadow-glow border-transparent',
-  secondary: 'bg-[#333333] hover:bg-[#444444] text-white border-[#444444]',
-  ghost: 'bg-transparent hover:bg-[#333333] text-[#B0B0B0] hover:text-white border-transparent',
+  primary: 'bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] hover:from-[#4F46E5] hover:to-[#7C3AED] text-white shadow-glow border-transparent',
+  secondary: 'bg-[#1E293B] hover:bg-[#334155] text-white border-[#334155]',
+  ghost: 'bg-transparent hover:bg-[#1E293B] text-[#94A3B8] hover:text-white border-transparent',
   danger: 'bg-[#EF4444]/15 hover:bg-[#EF4444]/25 text-[#EF4444] border-[#EF4444]/30',
 };
 
@@ -32,7 +32,7 @@ const Button = forwardRef(({
       aria-label={ariaLabel}
       aria-busy={loading}
       className={cn(
-        'inline-flex items-center justify-center gap-2 border font-semibold transition-all duration-180 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-[#FF6B6B]',
+        'inline-flex items-center justify-center gap-2 border font-semibold transition-all duration-180 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-[#6366F1]',
         VARIANTS[variant] || VARIANTS.primary,
         SIZES[size] || SIZES.md,
         className

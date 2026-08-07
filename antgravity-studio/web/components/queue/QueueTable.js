@@ -102,7 +102,7 @@ export default function QueueTable({ jobs = [], onPlay, onPause, onCancel, onDel
                     </div>
                     <div className="h-1.5 bg-[#333333] rounded-full overflow-hidden w-full">
                       <div
-                        className={`h-full transition-all duration-500 ${job.status === 'completed' ? 'bg-[#10B981]' : job.status === 'failed' ? 'bg-[#EF4444]' : 'bg-[#FF6B6B]'}`}
+                        className={`h-full transition-all duration-500 ${job.status === 'completed' ? 'bg-[#10B981]' : job.status === 'failed' ? 'bg-[#EF4444]' : 'bg-[#6366F1]'}`}
                         style={{ width: `${job.progress}%` }}
                       />
                     </div>

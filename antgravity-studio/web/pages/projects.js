@@ -82,8 +82,8 @@ function ForgeButton({ section, forging, onForge }) {
     <button
       onClick={() => onForge(section)}
       disabled={isForging}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-card text-xs font-semibold text-white transition disabled:opacity-60"
-      style={{ background: 'linear-gradient(135deg, #FF6B6B, #7C3AED)' }}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-card text-xs font-semibold text-white transition disabled:opacity-60 shadow-glow"
+      style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}
     >
       {isForging ? <Loader size={12} className="animate-spin" /> : '🔥'}
       {isForging ? 'Forjando...' : 'Forjar com IA'}
@@ -96,7 +96,7 @@ function Toggle({ label, checked, onChange }) {
     <label className="flex items-center gap-3 cursor-pointer group">
       <div
         onClick={() => onChange(!checked)}
-        className={`w-9 h-5 rounded-full transition relative ${checked ? 'bg-accent-red' : 'bg-bg-tertiary border border-border'}`}
+        className={`w-9 h-5 rounded-full transition relative ${checked ? 'bg-[#6366F1]' : 'bg-bg-tertiary border border-border'}`}
       >
         <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all shadow ${checked ? 'left-4' : 'left-0.5'}`} />
       </div>

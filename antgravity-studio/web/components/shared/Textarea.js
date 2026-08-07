@@ -16,9 +16,9 @@ const Textarea = forwardRef(({
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={fieldId} className="block text-xs font-medium text-[#B0B0B0]">
+        <label htmlFor={fieldId} className="block text-xs font-medium text-[#94A3B8]">
           {label}
-          {required && <span className="text-[#FF6B6B] ml-1">*</span>}
+          {required && <span className="text-[#6366F1] ml-1">*</span>}
         </label>
       )}
 
@@ -27,14 +27,18 @@ const Textarea = forwardRef(({
         id={fieldId}
         rows={rows}
         className={cn(
-          'w-full bg-[#333333] border rounded-input p-3 text-sm text-white placeholder-[#B0B0B0]/40 outline-none transition duration-180 resize-none font-sans focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]/40',
-          error ? 'border-[#EF4444]' : 'border-[#444444]',
+          'w-full bg-[#0F172A] border border-[#334155] rounded-input p-3 text-sm text-white placeholder-[#64748B] outline-none transition duration-180 resize-none font-sans focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1]',
+          error ? 'border-[#EF4444] focus:border-[#EF4444]' : 'border-[#334155]',
           textareaClassName
         )}
         {...props}
       />
 
-      {error && <p className="text-xs text-[#EF4444] font-medium">{error}</p>}
+      {error && (
+        <p className="text-[11px] text-[#EF4444] font-medium" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 });

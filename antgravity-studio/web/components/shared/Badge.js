@@ -1,9 +1,9 @@
 import { cn } from '../../lib/utils';
 
 const VARIANTS = {
-  default: 'bg-[#333333] text-[#B0B0B0] border-[#444444]',
-  primary: 'bg-[#FF6B6B]/15 text-[#FF6B6B] border-[#FF6B6B]/30',
-  secondary: 'bg-[#A78BFA]/15 text-[#A78BFA] border-[#A78BFA]/30',
+  default: 'bg-[#334155] text-[#94A3B8] border-[#475569]',
+  primary: 'bg-[#6366F1]/15 text-[#6366F1] border-[#6366F1]/30',
+  secondary: 'bg-[#8B5CF6]/15 text-[#8B5CF6] border-[#8B5CF6]/30',
   success: 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30',
   warning: 'bg-[#F59E0B]/15 text-[#F59E0B] border-[#F59E0B]/30',
   error: 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30',

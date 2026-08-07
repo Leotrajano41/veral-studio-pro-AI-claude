@@ -468,7 +468,7 @@ export default function Pipeline() {
               onClick={handleStartPipeline}
               disabled={starting || mediaSources.length === 0}
               className="w-full py-4 rounded-card font-bold text-lg text-white transition disabled:opacity-50 relative overflow-hidden group"
-              style={{ background: 'linear-gradient(135deg, #FF6B6B 0%, #FF4081 50%, #7C3AED 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%)' }}
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition" />
               {starting ? (

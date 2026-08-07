@@ -40,7 +40,7 @@ export default function MediasPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ImageIcon size={24} className="text-[#FF6B6B]" /> 🎬 Mídias
+              <ImageIcon size={24} className="text-[#6366F1]" /> 🎬 Mídias
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               Buscar, visualizar e baixar mídias stock de Pixabay e Pexels
@@ -50,16 +50,16 @@ export default function MediasPage() {
         </div>
 
         {/* ── NAVEGAÇÃO POR ABAS ── */}
-        <div className="flex gap-1 bg-[#2a2a2a] p-1 rounded-card border border-[#444444] max-w-md">
+        <div className="flex gap-1 bg-[#1E293B] p-1 rounded-card border border-[#334155] max-w-md">
           <button
             onClick={() => setActiveTab('search')}
-            className={`flex-1 py-2 px-3 rounded text-xs font-semibold transition duration-150 ${activeTab === 'search' ? 'bg-[#FF6B6B] text-white shadow-glow' : 'text-[#B0B0B0] hover:text-white'}`}
+            className={`flex-1 py-2 px-3 rounded text-xs font-semibold transition duration-150 ${activeTab === 'search' ? 'bg-[#6366F1] text-white shadow-glow' : 'text-[#94A3B8] hover:text-white'}`}
           >
             🔍 Em Busca
           </button>
           <button
             onClick={() => setActiveTab('library')}
-            className={`flex-1 py-2 px-3 rounded text-xs font-semibold transition duration-150 ${activeTab === 'library' ? 'bg-[#FF6B6B] text-white shadow-glow' : 'text-[#B0B0B0] hover:text-white'}`}
+            className={`flex-1 py-2 px-3 rounded text-xs font-semibold transition duration-150 ${activeTab === 'library' ? 'bg-[#6366F1] text-white shadow-glow' : 'text-[#94A3B8] hover:text-white'}`}
           >
             📁 Biblioteca ({libraryList.length})
           </button>

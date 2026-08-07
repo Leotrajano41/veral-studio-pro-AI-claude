@@ -35,14 +35,14 @@ export default function Sidebar() {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          'fixed top-16 left-0 bottom-0 z-30 bg-[#1a1a1a] border-r border-[#444444] hidden lg:flex flex-col transition-all duration-300',
+          'fixed top-16 left-0 bottom-0 z-30 bg-[#0F172A] border-r border-[#334155] hidden lg:flex flex-col transition-all duration-300',
           collapsed ? 'w-16' : 'w-60'
         )}
       >
         {/* Collapse Toggle Button */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-6 w-6 h-6 rounded-full bg-[#2a2a2a] border border-[#444444] flex items-center justify-center text-[#B0B0B0] hover:text-white transition z-10"
+          className="absolute -right-3 top-6 w-6 h-6 rounded-full bg-[#1E293B] border border-[#334155] flex items-center justify-center text-[#94A3B8] hover:text-white transition z-10"
           aria-label={collapsed ? 'Expandir Sidebar' : 'Colapsar Sidebar'}
         >
           {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
@@ -64,16 +64,16 @@ export default function Sidebar() {
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-card text-xs font-semibold transition relative group',
                   active
-                    ? 'bg-[#FF6B6B] text-white shadow-glow'
-                    : 'text-[#B0B0B0] hover:text-white hover:bg-[#333333]'
+                    ? 'bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-glow'
+                    : 'text-[#94A3B8] hover:text-white hover:bg-[#1E293B]'
                 )}
               >
-                <Icon size={16} className={cn('shrink-0', active ? 'text-white' : 'text-[#B0B0B0] group-hover:text-white')} />
+                <Icon size={16} className={cn('shrink-0', active ? 'text-white' : 'text-[#94A3B8] group-hover:text-white')} />
                 {!collapsed && <span className="truncate">{item.label}</span>}
                 {!collapsed && item.badge && (
                   <span className={cn(
                     'ml-auto text-[9px] px-1.5 py-0.2 rounded font-bold uppercase',
-                    active ? 'bg-white/20 text-white' : 'bg-[#FF6B6B]/20 text-[#FF6B6B]'
+                    active ? 'bg-white/20 text-white' : 'bg-[#6366F1]/20 text-[#6366F1]'
                   )}>
                     {item.badge}
                   </span>
@@ -85,7 +85,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Bar Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#1a1a1a] border-t border-[#444444] px-2 py-1.5 flex items-center justify-around overflow-x-auto">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0F172A] border-t border-[#334155] px-2 py-1.5 flex items-center justify-around overflow-x-auto">
         {navItems.slice(0, 5).map((item) => {
           const active = router.pathname === item.href;
           const Icon = item.icon;
@@ -95,7 +95,7 @@ export default function Sidebar() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center gap-0.5 p-1 rounded text-[10px] font-semibold transition',
-                active ? 'text-[#FF6B6B]' : 'text-[#B0B0B0]'
+                active ? 'text-[#6366F1]' : 'text-[#94A3B8]'
               )}
             >
               <Icon size={18} />

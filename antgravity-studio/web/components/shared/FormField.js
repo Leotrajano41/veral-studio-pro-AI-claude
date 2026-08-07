@@ -17,9 +17,9 @@ const FormField = forwardRef(({
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={fieldId} className="block text-xs font-medium text-[#B0B0B0]">
+        <label htmlFor={fieldId} className="block text-xs font-medium text-[#94A3B8]">
           {label}
-          {required && <span className="text-[#FF6B6B] ml-1" aria-hidden="true">*</span>}
+          {required && <span className="text-[#6366F1] ml-1" aria-hidden="true">*</span>}
         </label>
       )}
 
@@ -30,22 +30,22 @@ const FormField = forwardRef(({
         aria-invalid={!!error}
         aria-describedby={error ? `${fieldId}-error` : helpText ? `${fieldId}-help` : undefined}
         className={cn(
-          'w-full bg-[#333333] border rounded-input px-4 py-2.5 text-sm text-white placeholder-[#B0B0B0]/40 outline-none transition duration-180 focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]/40',
-          error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-[#EF4444]/40' : 'border-[#444444]',
+          'w-full bg-[#0F172A] border border-[#334155] rounded-input px-3 py-2 text-sm text-white placeholder-[#64748B] focus:outline-none focus:border-[#6366F1] focus:ring-1 focus:ring-[#6366F1] transition duration-180 disabled:opacity-50 disabled:bg-[#1E293B]',
+          error && 'border-[#EF4444] focus:border-[#EF4444] focus:ring-[#EF4444]',
           inputClassName
         )}
         {...props}
       />
 
-      {error && (
-        <p id={`${fieldId}-error`} className="text-xs text-[#EF4444] font-medium" role="alert">
-          {error}
+      {helpText && !error && (
+        <p id={`${fieldId}-help`} className="text-[11px] text-[#64748B]">
+          {helpText}
         </p>
       )}
 
-      {!error && helpText && (
-        <p id={`${fieldId}-help`} className="text-[11px] text-[#B0B0B0]/60">
-          {helpText}
+      {error && (
+        <p id={`${fieldId}-error`} className="text-[11px] text-[#EF4444] font-medium" role="alert">
+          {error}
         </p>
       )}
     </div>

@@ -47,7 +47,7 @@ export default function QueuePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ListVideo size={24} className="text-[#FF6B6B]" /> 🎬 Fila de Produção
+              <ListVideo size={24} className="text-[#6366F1]" /> 🎬 Fila de Produção
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
               <span className="text-[#F59E0B] font-semibold">{processingCount} em produção</span>
@@ -105,7 +105,7 @@ export default function QueuePage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded text-xs font-semibold whitespace-nowrap transition duration-150 ${activeTab === tab.id ? 'bg-[#FF6B6B] text-white shadow-glow' : 'text-[#B0B0B0] hover:text-white hover:bg-[#333333]'}`}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded text-xs font-semibold whitespace-nowrap transition duration-150 ${activeTab === tab.id ? 'bg-[#6366F1] text-white shadow-glow' : 'text-[#B0B0B0] hover:text-white hover:bg-[#333333]'}`}
               >
                 <span>{tab.label}</span>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-[#333333] text-[#B0B0B0]'}`}>

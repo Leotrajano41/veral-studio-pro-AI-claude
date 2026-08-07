@@ -99,7 +99,7 @@ export default function JobCard({ job, onPlay, onPause, onCancel, onDelete }) {
         </div>
         <div className="h-2 bg-[#333333] rounded-full overflow-hidden w-full">
           <div
-            className={`h-full transition-all duration-500 ${job.status === 'completed' ? 'bg-[#10B981]' : job.status === 'failed' ? 'bg-[#EF4444]' : 'bg-[#FF6B6B]'}`}
+            className={`h-full transition-all duration-500 ${job.status === 'completed' ? 'bg-[#10B981]' : job.status === 'failed' ? 'bg-[#EF4444]' : 'bg-[#6366F1]'}`}
             style={{ width: `${job.progress}%` }}
           />
         </div>
