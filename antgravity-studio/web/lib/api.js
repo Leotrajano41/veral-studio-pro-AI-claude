@@ -1,81 +1,85 @@
 import axios from 'axios';
-import toast from 'react-hot-toast';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-const client = axios.create({
-  baseURL: API_URL,
+const api = axios.create({
+  baseURL: BASE_URL,
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
 
-client.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-client.interceptors.response.use(
-  (res) => res.data,
-  (err) => {
-    const msg = err.response?.data?.error || err.message || 'Erro de conexão';
-    toast.error(msg);
-    return Promise.reject(new Error(msg));
+// Interceptor para logs e tratamento global de erros
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('[API Error]', error?.response?.data || error.message);
+    return Promise.reject(error);
   }
 );
 
-// ── Projects ──
-export async function getProjects(page = 1, limit = 12) {
-  return client.get('/projects', { params: { page, limit } });
-}
-export async function createProject(data) {
-  return client.post('/projects', data);
-}
-export async function updateProject(id, data) {
-  return client.put(`/projects/${id}`, data);
-}
-export async function deleteProject(id) {
-  return client.delete(`/projects/${id}`);
-}
+// ── Service 1: Project Service ──
+export const projectService = {
+  list: (params) => api.get('/projects', { params }),
+  get: (id) => api.get(`/projects/${id}`),
+  create: (data) => api.post('/projects', data),
+  update: (id, data) => api.put(`/projects/${id}`, data),
+  delete: (id) => api.delete(`/projects/${id}`),
+  duplicate: (id) => api.post(`/projects/${id}/duplicate`),
+};
 
-// ── Videos ──
-export async function getVideos(page = 1, limit = 12) {
-  return client.get('/videos', { params: { page, limit } });
-}
-export async function generateVideo(data) {
-  return client.post('/videos/generate', data);
-}
-export async function getVideoStatus(id) {
-  return client.get(`/videos/${id}/status`);
-}
-export async function deleteVideo(id) {
-  return client.delete(`/videos/${id}`);
-}
+// ── Service 2: Pipeline Service ──
+export const pipelineService = {
+  start: (data) => api.post('/pipeline/start', data),
+  status: (projectId) => api.get(`/pipeline/${projectId}/status`),
+  reset: (projectId) => api.post(`/pipeline/${projectId}/reset`),
+  cancel: (jobId) => api.post(`/queue/${jobId}/cancel`),
+};
 
-// ── Settings ──
-export async function getSettings() {
-  return client.get('/settings');
-}
-export async function updateSettings(data) {
-  return client.post('/settings', data);
-}
+// ── Service 3: Trends Service ──
+export const trendsService = {
+  search: (params) => api.get('/trends/youtube', { params }),
+  hot: () => api.get('/trends/youtube', { params: { chart: 'mostPopular' } }),
+};
 
-// ── Antgravity ──
-export async function optimizeCode(codigo) {
-  return client.post('/antgravity/optimize', { codigo });
-}
-export async function analyzePerformance(codigo) {
-  return client.post('/antgravity/analyze', { codigo });
-}
-export async function autoDeploy(projeto) {
-  return client.post('/antgravity/deploy', projeto);
-}
+// ── Service 4: News Service ──
+export const newsService = {
+  search: (params) => api.get('/trends/news', { params }),
+  headlines: () => api.get('/trends/news', { params: { section: 'top' } }),
+  getChannels: () => api.get('/news/channels'),
+  createChannel: (data) => api.post('/news/channels', data),
+  addToPauta: (channelId, item) => api.post(`/news/channels/${channelId}/pauta`, item),
+};
 
-// ── Connection test ──
-export async function testAPIConnection(keyName, keyValue) {
-  return client.post('/settings/test-key', { keyName, keyValue });
-}
+// ── Service 5: Media Service ──
+export const mediaService = {
+  searchPixabay: (params) => api.get('/media/pixabay', { params }),
+  searchPexels: (params) => api.get('/media/pexels', { params }),
+  download: (items) => api.post('/media/download', { items }),
+  getLibrary: () => api.get('/media/library'),
+  deleteLibraryItem: (id) => api.delete(`/media/library/${id}`),
+};
 
-export default client;
+// ── Service 6: Config Service ──
+export const configService = {
+  get: () => api.get('/config'),
+  update: (data) => api.patch('/config', data),
+  listApiKeys: () => api.get('/apikeys'),
+  saveApiKey: (data) => api.post('/apikeys', data),
+  testApiKey: (service) => api.post(`/apikeys/${service}/test`),
+  validateSerial: (serial) => api.post('/config/validate-serial', { serial }),
+  exportBackup: () => api.get('/config/backup', { responseType: 'blob' }),
+  importBackup: (formData) => api.post('/config/restore', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  clearCache: (options) => api.post('/config/cache/clear', options),
+};
+
+// ── Service 7: Voice Service ──
+export const voiceService = {
+  list: (params) => api.get('/voices', { params }),
+  get: (id) => api.get(`/voices/${id}`),
+  createCustom: (formData) => api.post('/voices/custom', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  delete: (id) => api.delete(`/voices/${id}`),
+  loadEdgeVoices: () => api.get('/voices/edge-tts'),
+  installXTTS: () => api.post('/voices/xtts/install'),
+};
+
+export default api;

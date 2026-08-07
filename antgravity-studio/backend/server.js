@@ -10,6 +10,13 @@ const projectRoutes = require('./routes/projects');
 const videoRoutes = require('./routes/videos');
 const mediaRoutes = require('./routes/media');
 const antgravityRoutes = require('./routes/antgravity');
+const queueRoutes = require('./routes/queue');
+const scriptsRoutes = require('./routes/scripts');
+const pipelineRoutes = require('./routes/pipeline');
+const voicesRoutes = require('./routes/voices');
+const apikeysRoutes = require('./routes/apikeys');
+const trendsRoutes = require('./routes/trends');
+const configRoutes = require('./routes/config');
 
 // ── Configuração ──
 const PORT = process.env.PORT || 5000;
@@ -62,6 +69,13 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/antgravity', antgravityRoutes);
+app.use('/api/queue', queueRoutes);
+app.use('/api/scripts', scriptsRoutes);
+app.use('/api/pipeline', pipelineRoutes);
+app.use('/api/voices', voicesRoutes);
+app.use('/api/apikeys', apikeysRoutes);
+app.use('/api/trends', trendsRoutes);
+app.use('/api/config', configRoutes);
 
 // ── 404 e Error Handler ──
 app.use(notFoundHandler);

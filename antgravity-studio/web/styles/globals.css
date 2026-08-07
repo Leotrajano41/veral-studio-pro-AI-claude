@@ -16,47 +16,65 @@
   }
 
   body {
-    background-color: #0f0f0f;
-    color: #ffffff;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #1a1a1a;
+    color: #FFFFFF;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  code, pre {
+    font-family: 'Courier New', 'Courier', monospace;
+  }
+
+  /* Accessibility focus visible state */
+  :focus-visible {
+    outline: 2px solid #FF6B6B;
+    outline-offset: 2px;
+  }
+
   ::selection {
-    background-color: rgba(255, 107, 107, 0.3);
+    background-color: rgba(255, 107, 107, 0.35);
     color: #ffffff;
   }
 
   ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0f0f0f;
+    background: #1a1a1a;
   }
   ::-webkit-scrollbar-thumb {
-    background: #404040;
+    background: #444444;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #555555;
+    background: #666666;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-bg-secondary border border-border rounded-card shadow-card;
+    @apply bg-[#2a2a2a] border border-[#444444] rounded-card shadow-card;
   }
   .input-base {
-    @apply w-full bg-bg-tertiary border border-border rounded-input px-4 py-3 text-txt-primary placeholder-txt-secondary/50 outline-none transition focus:border-accent-red focus:ring-1 focus:ring-accent-red/30;
+    @apply w-full bg-[#333333] border border-[#444444] rounded-input px-4 py-2.5 text-white placeholder-[#B0B0B0]/50 outline-none transition duration-150 focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]/40;
   }
   .btn-primary {
-    @apply bg-accent-red hover:bg-accent-red/80 text-white font-semibold px-6 py-3 rounded-card transition shadow-glow hover:shadow-none;
+    @apply bg-[#FF6B6B] hover:bg-[#FF5252] text-white font-semibold px-5 py-2.5 rounded-card transition duration-150 shadow-glow active:scale-[0.98];
   }
   .btn-secondary {
-    @apply bg-bg-tertiary hover:bg-border text-txt-primary font-semibold px-6 py-3 rounded-card border border-border transition;
+    @apply bg-[#333333] hover:bg-[#444444] text-white font-semibold px-5 py-2.5 rounded-card border border-[#444444] transition duration-150 active:scale-[0.98];
   }
   .btn-danger {
-    @apply bg-error/10 hover:bg-error/20 text-error font-semibold px-6 py-3 rounded-card border border-error/20 transition;
+    @apply bg-[#EF4444]/15 hover:bg-[#EF4444]/25 text-[#EF4444] font-semibold px-5 py-2.5 rounded-card border border-[#EF4444]/30 transition duration-150 active:scale-[0.98];
   }
 }
