@@ -61,20 +61,34 @@
   }
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-[#2a2a2a] border border-[#444444] rounded-card shadow-card;
-  }
-  .input-base {
-    @apply w-full bg-[#333333] border border-[#444444] rounded-input px-4 py-2.5 text-white placeholder-[#B0B0B0]/50 outline-none transition duration-150 focus:border-[#FF6B6B] focus:ring-1 focus:ring-[#FF6B6B]/40;
-  }
-  .btn-primary {
-    @apply bg-[#FF6B6B] hover:bg-[#FF5252] text-white font-semibold px-5 py-2.5 rounded-card transition duration-150 shadow-glow active:scale-[0.98];
-  }
-  .btn-secondary {
-    @apply bg-[#333333] hover:bg-[#444444] text-white font-semibold px-5 py-2.5 rounded-card border border-[#444444] transition duration-150 active:scale-[0.98];
-  }
-  .btn-danger {
-    @apply bg-[#EF4444]/15 hover:bg-[#EF4444]/25 text-[#EF4444] font-semibold px-5 py-2.5 rounded-card border border-[#EF4444]/30 transition duration-150 active:scale-[0.98];
-  }
+/* Custom Spinner Animation */
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid #FF6B6B;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-center: center;
+  padding: 2rem;
+  gap: 0.75rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1.5px black;
+}
+
+.text-shadow-neon {
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.8), 0 0 20px rgba(167, 139, 250, 0.6);
 }
