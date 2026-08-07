@@ -25,10 +25,10 @@ export default function VoiceoversPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Mic size={24} className="text-[#FF6B6B]" /> Módulo Narrações (TTS)
+              <Mic size={24} className="text-[#FF6B6B]" /> 🎤 Narrações
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
-              Converta seus roteiros em faixas de áudio narradas por vozes neurais realistas com ajustes de tom, velocidade e volume
+              Gere narrações em áudio (TTS) com tom, velocidade e volume personalizados
             </p>
           </div>
           <Badge text={`${recordings.length} áudio(s)`} variant="primary" />

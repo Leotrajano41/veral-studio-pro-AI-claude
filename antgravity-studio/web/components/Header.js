@@ -1,56 +1,55 @@
 import Link from 'next/link';
-import { Zap, Settings, LogOut, Hash } from 'lucide-react';
-
-const USER_SERIAL = 'AG-2026-PRO-7X4K';
+import { Video, Settings, LogOut, ShieldCheck, Zap } from 'lucide-react';
+import Button from './shared/Button';
 
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 h-16 bg-bg-secondary/90 backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-6">
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-        <div className="w-8 h-8 bg-gradient-to-br from-accent-red to-pink-600 rounded-lg flex items-center justify-center group-hover:shadow-glow transition">
-          <Zap size={18} className="text-white" />
-        </div>
-        <div className="hidden sm:block">
-          <span className="text-base font-bold text-txt-primary leading-none">
-            AntGravity <span className="text-accent-red">Studio</span>
-          </span>
-          <p className="text-[9px] text-txt-secondary/50 font-mono tracking-widest">VIRAL STUDIO PRO AI</p>
-        </div>
-      </Link>
+    <header className="fixed top-0 left-0 right-0 z-40 h-16 bg-[#1a1a1a] border-b border-[#444444] px-4 flex items-center justify-between">
+      {/* Brand & Logo */}
+      <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-card bg-gradient-to-br from-[#FF6B6B] to-[#A78BFA] flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition duration-180">
+            <Video size={20} className="fill-white/20" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+              Viral Studio Pro AI <span className="text-[10px] bg-[#FF6B6B] text-white px-1.5 py-0.2 rounded font-mono">v2.0 PRO</span>
+            </span>
+            <span className="text-[10px] text-[#B0B0B0] hidden sm:block">Plataforma Profissional de Automação de Vídeos IA</span>
+          </div>
+        </Link>
+      </div>
 
-      {/* Serial + Actions */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Serial */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-tertiary border border-border">
-          <Hash size={11} className="text-accent-teal" />
-          <span className="text-[11px] font-mono text-txt-secondary">{USER_SERIAL}</span>
+      {/* Serial do Usuário & Ações */}
+      <div className="flex items-center gap-3">
+        {/* Serial Mascarado / Ativo */}
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-card bg-[#2a2a2a] border border-[#444444] text-xs">
+          <ShieldCheck size={14} className="text-[#10B981]" />
+          <span className="text-[#B0B0B0]">Serial:</span>
+          <span className="font-mono font-semibold text-white">AG-2026-PRO-7X4K</span>
+          <span className="text-[10px] bg-[#10B981]/20 text-[#10B981] px-1.5 py-0.2 rounded font-bold">ATIVADO</span>
         </div>
 
-        {/* Config */}
-        <Link
-          href="/settings"
-          className="p-2 rounded-card hover:bg-bg-tertiary transition text-txt-secondary hover:text-txt-primary"
-          title="Configurações"
-        >
-          <Settings size={18} />
+        {/* Botão Configurações */}
+        <Link href="/settings">
+          <Button variant="secondary" size="sm" className="text-xs">
+            <Settings size={14} /> <span className="hidden sm:inline">Configurações</span>
+          </Button>
         </Link>
 
-        {/* Encerrar */}
-        <button
+        {/* Botão Encerrar */}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => {
-            if (typeof window !== 'undefined') {
-              if (confirm('Deseja encerrar a sessão?')) {
-                window.location.href = '/';
-              }
+            if (typeof window !== 'undefined' && window.confirm('Deseja encerrar a sessão no Viral Studio Pro AI?')) {
+              window.location.href = '/settings';
             }
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-card text-xs font-medium text-error border border-error/20 hover:bg-error/10 transition"
-          title="Encerrar sessão"
+          className="text-xs text-[#EF4444] hover:bg-[#EF4444]/10"
         >
-          <LogOut size={13} />
-          <span className="hidden sm:inline">Encerrar</span>
-        </button>
+          <LogOut size={14} /> <span className="hidden sm:inline">Encerrar</span>
+        </Button>
       </div>
     </header>
   );

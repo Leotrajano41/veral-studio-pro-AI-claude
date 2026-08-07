@@ -9,7 +9,7 @@ import MediaLibrary from '../components/media/MediaLibrary';
 import { Image as ImageIcon } from 'lucide-react';
 
 export default function MediasPage() {
-  const [activeTab, setActiveTab] = useState('search'); // 'search' | 'library'
+  const [activeTab, setActiveTab] = useState('search');
   const [previewItem, setPreviewItem] = useState(null);
 
   const {
@@ -40,10 +40,10 @@ export default function MediasPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ImageIcon size={24} className="text-[#FF6B6B]" /> Módulo Mídias
+              <ImageIcon size={24} className="text-[#FF6B6B]" /> 🎬 Mídias
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
-              Busque mídias stock em Pixabay e Pexels e gerencie sua biblioteca local de downloads
+              Buscar, visualizar e baixar mídias stock de Pixabay e Pexels
             </p>
           </div>
           <Badge text={`${libraryList.length} mídia(s) na biblioteca`} variant="primary" />

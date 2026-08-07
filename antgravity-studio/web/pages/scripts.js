@@ -22,10 +22,10 @@ export default function ScriptsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <ScrollText size={24} className="text-[#FF6B6B]" /> Módulo Roteiros
+              <ScrollText size={24} className="text-[#FF6B6B]" /> 📝 Roteiros
             </h1>
             <p className="text-sm text-[#B0B0B0] mt-1">
-              Gere roteiros virais altamente persuasivos a partir de URLs, artigos ou temas usando Inteligência Artificial
+              Gere roteiros virais e persuasivos usando Inteligência Artificial
             </p>
           </div>
           <Badge text={`${scripts.length} roteiro(s)`} variant="primary" />

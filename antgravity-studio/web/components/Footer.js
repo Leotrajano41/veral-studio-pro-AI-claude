@@ -1,10 +1,8 @@
-import { Heart } from 'lucide-react';
-
 export default function Footer() {
   return (
-    <footer className="border-t border-border py-6 text-center">
-      <p className="text-xs text-txt-secondary flex items-center justify-center gap-1">
-        © {new Date().getFullYear()} AntGravity Studio — Feito com <Heart size={12} className="text-accent-red" /> e Inteligência Artificial
+    <footer className="w-full bg-[#1a1a1a] border-t border-[#444444] py-4 px-6 text-center text-xs text-[#B0B0B0]">
+      <p>
+        © 2026 <strong className="text-white">Viral Studio Pro AI v2.0</strong> — Feito com ❤️ e Inteligência Artificial
       </p>
     </footer>
   );
