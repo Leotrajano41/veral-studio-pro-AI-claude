@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
+import HelpPopover from '../components/shared/HelpPopover';
 import {
   Zap, Play, Upload, Link as LinkIcon, Rss, Wand2,
   Mic2, Video, Settings2, Type, Layers, Radio,
@@ -194,13 +195,29 @@ export default function Pipeline() {
               Fluxo automatizado completo: Roteiros → TTS → Mídias → Picotador → Renderização → SEO → Thumbnail
             </p>
           </div>
-          <button
-            onClick={() => setAdvancedMode(!advancedMode)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-card border text-sm font-medium transition ${advancedMode ? 'border-accent-red text-accent-red bg-accent-red/10' : 'border-border text-txt-secondary hover:text-txt-primary'}`}
-          >
-            {advancedMode ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-            {advancedMode ? 'Avançado' : 'Simples'}
-          </button>
+          <div className="flex items-center gap-3">
+            <HelpPopover
+              moduleTitle="Pipeline Mágico"
+              description="O Pipeline Mágico executa todo o processo de criação de vídeos de forma contínua em 5 a 7 fases."
+              steps={[
+                'Insira URLs de referência ou transcrições.',
+                'Defina o nicho e número de vídeos.',
+                'Escolha o idioma e a voz TTS.',
+                'Selecione a orientação (16:9 ou 9:16).',
+                'Clique em "🚀 INICIAR PIPELINE MÁGICO".',
+              ]}
+              tips={[
+                'No modo Avançado você pode ajustar o tempo dos cortes (chunk size) e o modelo de Thumbnail.',
+              ]}
+            />
+            <button
+              onClick={() => setAdvancedMode(!advancedMode)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-card border text-sm font-medium transition ${advancedMode ? 'border-[#6366F1] text-[#6366F1] bg-[#6366F1]/10' : 'border-[#334155] text-[#94A3B8] hover:text-white'}`}
+            >
+              {advancedMode ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+              {advancedMode ? 'Avançado' : 'Simples'}
+            </button>
+          </div>
         </div>
 
         {/* ── 1. Conteúdo & Referências ── */}

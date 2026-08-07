@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Video, Settings, LogOut, ShieldCheck } from 'lucide-react';
+import { Video, Settings, LogOut, ShieldCheck, HelpCircle, BookOpen } from 'lucide-react';
 import Button from './shared/Button';
 
 export default function Header() {
@@ -29,6 +29,13 @@ export default function Header() {
           <span className="font-mono font-semibold text-white">AG-2026-PRO-7X4K</span>
           <span className="text-[10px] bg-[#10B981]/20 text-[#10B981] px-1.5 py-0.2 rounded font-bold">ATIVADO</span>
         </div>
+
+        {/* Botão de Documentação / Ajuda */}
+        <Link href="/docs" title="Central de Ajuda e Tutoriais">
+          <Button variant="secondary" size="sm" className="text-xs">
+            <BookOpen size={14} className="text-[#6366F1]" /> <span className="hidden sm:inline">Docs</span>
+          </Button>
+        </Link>
 
         {/* Botão Configurações */}
         <Link href="/settings">

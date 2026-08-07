@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import {
   Home, Zap, FolderKanban, ListOrdered, TrendingUp, Newspaper,
   ScrollText, Mic2, Image as ImageIcon, Clapperboard, LayoutTemplate,
-  FolderOpen, Film, Tv, Settings, ChevronLeft, ChevronRight
+  FolderOpen, Film, Tv, Settings, BookOpen, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -23,6 +23,7 @@ const navItems = [
   { href: '/files', label: 'Arquivos', icon: FolderOpen },
   { href: '/vsl', label: 'VSL Cinematográfica', icon: Film, badge: '42 P' },
   { href: '/channels', label: 'Canais / Upload', icon: Tv },
+  { href: '/docs', label: 'Documentação', icon: BookOpen },
   { href: '/settings', label: 'Configurações', icon: Settings },
 ];
 
@@ -48,7 +49,7 @@ export default function Sidebar() {
           {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
         </button>
 
-        {/* Navigation List (15 Menu Links) */}
+        {/* Navigation List (16 Menu Links) */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-1 custom-scrollbar">
           {navItems.map((item) => {
             const active = router.pathname === item.href ||
