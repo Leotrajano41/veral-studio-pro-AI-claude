@@ -7,22 +7,9 @@ import Dropdown from '../shared/Dropdown';
 import { Sparkles, Upload, FileText, Link as LinkIcon, Flame, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const LANGUAGES = [
-  '🇧🇷 Português (Brasil)',
-  '🇵🇹 Português (Portugal)',
-  '🇺🇸 English (US)',
-  '🇬🇧 English (UK)',
-  '🇪🇸 Español',
-  '🇲🇽 Español (México)',
-  '🇫🇷 Français',
-  '🇩🇪 Deutsch',
-  '🇮🇹 Italiano',
-  '🇯🇵 日本語 (Japanese)',
-  '🇨🇳 中文 (Chinese)',
-  '🇷🇺 Русский (Russian)',
-  '🇦🇷 Español (Argentina)',
-  '🇨🇱 Español (Chile)',
-];
+import { ALL_LANGUAGES } from '../../constants/languages';
+
+const LANGUAGES = ALL_LANGUAGES.map((l) => `${l.flag} ${l.name}`);
 
 export default function ScriptGenerator({ onGenerate, loading }) {
   // Input Options

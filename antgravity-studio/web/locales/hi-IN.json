@@ -1,0 +1,19 @@
+{
+  "language": "hi-IN",
+  "name": "हिन्दी (Hindi)",
+  "flag": "🇮🇳",
+  "region": "India",
+  "speakers": "345M",
+  "translations": {
+    "app_title": "Viral Studio Pro AI v2.0",
+    "pipeline": "जादुई पाइपलाइन",
+    "script_generation": "स्क्रिप्ट निर्माण",
+    "voiceover": "वॉयसओवर और टीटीएस",
+    "subtitles": "उपशीर्षक",
+    "video_render": "वीडियो रेंडर",
+    "settings": "सेटिंग्स",
+    "status_complete": "✅ पूरा हुआ",
+    "status_pending": "⏳ लंबित",
+    "status_error": "❌ त्रुटि"
+  }
+}

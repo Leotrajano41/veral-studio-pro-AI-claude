@@ -17,14 +17,9 @@ const SOURCES = [
   '🔀 Todos (mesclado)',
 ];
 
-const LANGUAGES = [
-  'Português (Brasil)',
-  'English (US)',
-  'Español',
-  'Français',
-  'Deutsch',
-  'Italiano',
-];
+import { ALL_LANGUAGES } from '../../constants/languages';
+
+const LANGUAGES = ALL_LANGUAGES.map((l) => `${l.flag} ${l.name}`);
 
 export default function TrendSearch({
   query,

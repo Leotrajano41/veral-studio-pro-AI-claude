@@ -14,9 +14,13 @@ import toast from 'react-hot-toast';
 // ────────────────────────────────────────────────────────────
 // Constants
 // ────────────────────────────────────────────────────────────
-const NICHES = ['Tecnologia', 'Finanças', 'Saúde', 'Motivação', 'Culinária', 'Marketing', 'Educação', 'Entretenimento', 'Política', 'Esportes', 'Ciência', 'Negócios'];
-const LANGUAGES = ['pt-br', 'en', 'es', 'fr', 'de', 'it', 'pt-pt'];
-const LANGUAGE_LABELS = { 'pt-br': 'Português (BR)', 'en': 'English', 'es': 'Español', 'fr': 'Français', 'de': 'Deutsch', 'it': 'Italiano', 'pt-pt': 'Português (PT)' };
+import { ALL_LANGUAGES } from '../constants/languages';
+
+const LANGUAGES = ALL_LANGUAGES.map((l) => l.code.toLowerCase());
+const LANGUAGE_LABELS = ALL_LANGUAGES.reduce((acc, l) => {
+  acc[l.code.toLowerCase()] = `${l.flag} ${l.name}`;
+  return acc;
+}, {});
 const VOICES = ['Fernanda (Google PT-BR)', 'Ricardo (Google PT-BR)', 'Ana Wavenet', 'Alloy (OpenAI)', 'Nova (OpenAI)', 'Voz Clonada (XTTS)'];
 const VISIBILITIES = [{ v: 'public', label: '🌐 Público' }, { v: 'unlisted', label: '🔗 Não listado' }, { v: 'private', label: '🔒 Privado' }];
 const YOUTUBE_ACCOUNTS = ['Conta Principal', 'Conta Secundária'];

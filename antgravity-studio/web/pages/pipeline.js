@@ -21,11 +21,7 @@ import toast from 'react-hot-toast';
 // ────────────────────────────────────────────────────────────
 // Constants
 // ────────────────────────────────────────────────────────────
-const LANGUAGES = [
-  'Português (BR)', 'English (US)', 'English (UK)', 'Español', 'Français',
-  'Deutsch', 'Italiano', 'Português (PT)', 'Nederlands', 'Polski',
-  'Русский', 'Türkçe', 'العربية', '中文', '日本語', '한국어',
-];
+import { PIPELINE_LANGUAGES as LANGUAGES } from '../constants/languages';
 
 const VOICES = [
   'Fernanda (Google PT-BR)', 'Ricardo (Google PT-BR)', 'Ana Wavenet (Google)',

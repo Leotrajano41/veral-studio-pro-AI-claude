@@ -10,14 +10,12 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const LANGUAGES = [
-  { id: 'pt', label: 'Português' },
-  { id: 'en', label: 'English' },
-  { id: 'es', label: 'Español' },
-  { id: 'fr', label: 'Français' },
-  { id: 'de', label: 'Deutsch' },
-  { id: 'it', label: 'Italiano' },
-];
+import { ALL_LANGUAGES } from '../constants/languages';
+
+const LANGUAGES = ALL_LANGUAGES.map((l) => ({
+  id: l.code.toLowerCase(),
+  label: `${l.flag} ${l.name}`,
+}));
 
 const INITIAL_CLONED_VOICES = [
   { id: 'cv1', name: 'Valentino (Voz Dramática)', language: 'Português', status: 'ready', date: '2026-08-05', isPlaying: false },

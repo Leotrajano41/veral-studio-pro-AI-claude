@@ -19,13 +19,9 @@ const SECTIONS = [
   'Saúde',
 ];
 
-const LANGUAGES = [
-  '🇧🇷 Português (Brasil)',
-  '🇵🇹 Português (Portugal)',
-  '🇺🇸 English',
-  '🇪🇸 Español',
-  '🇫🇷 Français',
-];
+import { ALL_LANGUAGES } from '../../constants/languages';
+
+const LANGUAGES = ALL_LANGUAGES.map((l) => `${l.flag} ${l.name}`);
 
 const FRESHNESS = ['Últimas 24h', 'Últimos 2 dias', 'Última semana', 'Sem limite'];
 

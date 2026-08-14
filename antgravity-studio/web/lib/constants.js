@@ -7,12 +7,12 @@ export const NICHES = [
   { value: 'entertainment', label: 'Entretenimento' },
 ];
 
-export const LANGUAGES = [
-  { value: 'pt-BR', label: 'Português (BR)' },
-  { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
-  { value: 'fr', label: 'Français' },
-];
+import { ALL_LANGUAGES } from '../constants/languages';
+
+export const LANGUAGES = ALL_LANGUAGES.map((l) => ({
+  value: l.code,
+  label: `${l.flag} ${l.name}`,
+}));
 
 export const VIDEO_QUALITIES = [
   { value: '720p', label: '720p (HD)' },

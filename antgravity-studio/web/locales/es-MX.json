@@ -1,0 +1,19 @@
+{
+  "language": "es-MX",
+  "name": "Español (México) - LATAM",
+  "flag": "🇲🇽",
+  "region": "Mexico",
+  "speakers": "Regional",
+  "translations": {
+    "app_title": "Viral Studio Pro AI v2.0",
+    "pipeline": "Pipeline Mágico",
+    "script_generation": "Generación de Guiones",
+    "voiceover": "Locución y TTS Neural",
+    "subtitles": "Subtítulos Dinámicos",
+    "video_render": "Renderizado de Video",
+    "settings": "Configuración",
+    "status_complete": "✅ Completo",
+    "status_pending": "⏳ Pendiente",
+    "status_error": "❌ Error"
+  }
+}

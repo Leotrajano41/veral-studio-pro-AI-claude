@@ -1,0 +1,19 @@
+{
+  "language": "pa-IN",
+  "name": "ਪੰਜਾਬੀ (Punjabi)",
+  "flag": "🇮🇳",
+  "region": "India/Pakistan",
+  "speakers": "125M",
+  "translations": {
+    "app_title": "Viral Studio Pro AI v2.0",
+    "pipeline": "ਮੈਜਿਕ ਪਾਈਪਲਾਈਨ",
+    "script_generation": "ਸਕ੍ਰਿਪਟ ਨਿਰਮਾਣ",
+    "voiceover": "ਆਵਾਜ਼ ਅਤੇ ਟੀ.ਟੀ.ਐਸ",
+    "subtitles": "ਸਬ-ਟਾਈਟਲ",
+    "video_render": "ਵੀਡੀਓ ਰੈਂਡਰ",
+    "settings": "ਸੈਟਿੰਗਾਂ",
+    "status_complete": "✅ ਮੁੰਕਮਲ",
+    "status_pending": "⏳ ਬਾਕੀ",
+    "status_error": "❌ ਖਾਮੀ"
+  }
+}
