@@ -118,12 +118,12 @@ export default function SetupChecklistCard({ className }) {
                   ? 'bg-[#10B981]/5 border-[#10B981]/30 text-white shadow-[0_0_12px_rgba(16,185,129,0.08)]'
                   : isError
                     ? 'bg-[#EF4444]/10 border-[#EF4444]/40 text-white shadow-[0_0_12px_rgba(239,68,68,0.08)]'
-                    : 'bg-[#0F172A]/40 border-[#334155]/60 text-[#94A3B8] hover:border-[#6366F1]/40'
+                    : 'bg-[#F59E0B]/5 border-[#F59E0B]/25 text-[#94A3B8] hover:border-[#F59E0B]/50 shadow-[0_0_12px_rgba(245,158,11,0.04)]'
               )}
             >
               {/* Left Side: Indicator Checkbox & Info */}
               <div className="flex items-center gap-3 min-w-0">
-                {/* Visual Indicator Checkbox (Item 3 & Item 4) */}
+                {/* Visual Indicator Checkbox (Item 4.2 PENDENTE ⏳) */}
                 <div
                   className={cn(
                     'w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition-colors',
@@ -131,13 +131,13 @@ export default function SetupChecklistCard({ className }) {
                       ? 'bg-[#10B981] border-[#10B981] text-white shadow-[0_0_8px_rgba(16,185,129,0.4)]'
                       : isError
                         ? 'bg-[#EF4444]/20 border-[#EF4444] text-[#EF4444]'
-                        : 'bg-[#1E293B] border-[#334155] text-[#F59E0B]'
+                        : 'bg-[#F59E0B]/20 border-[#F59E0B]/60 text-[#FBBF24] shadow-[0_0_8px_rgba(245,158,11,0.25)]'
                   )}
-                  title={isConfigured ? 'API Configurada e Ativa' : isError ? 'Erro na API' : 'API Pendente de Configuração'}
+                  title={isConfigured ? 'API Configurada e Ativa' : isError ? 'Erro na API' : 'API Pendente de Configuração (Clique em Configurar)'}
                 >
                   {isConfigured && <CheckCircle2 size={15} strokeWidth={2.5} />}
                   {isError && <XCircle size={15} strokeWidth={2.5} />}
-                  {!isConfigured && !isError && <Clock size={14} strokeWidth={2.5} />}
+                  {!isConfigured && !isError && <Clock size={14} strokeWidth={2.5} className="animate-pulse" />}
                 </div>
 
                 {/* Icon & Details */}
@@ -156,6 +156,11 @@ export default function SetupChecklistCard({ className }) {
                         • Verificada: {lastChecked}
                       </span>
                     )}
+                    {!isConfigured && !isError && (
+                      <span className="text-[9px] text-[#FBBF24] font-mono hidden md:inline-block">
+                        • Status: Aguardando Chave
+                      </span>
+                    )}
                   </div>
                   <p className="text-[11px] text-[#64748B] truncate mt-0.5">{api.desc}</p>
                 </div>
@@ -170,7 +175,7 @@ export default function SetupChecklistCard({ className }) {
                       ? `✓ ${api.name} ativa e validada. Criptografada em AES-256.`
                       : isError
                         ? `❌ Falha ao conectar com ${api.name}`
-                        : `⏳ ${api.name} pendente de configuração`
+                        : `⏳ ${api.name} pendente. Clique em 'Configurar' para adicionar a chave.`
                   }
                 >
                   {isConfigured ? '✓ Configurada' : isError ? '❌ Erro' : '⏳ Pendente'}
@@ -178,7 +183,7 @@ export default function SetupChecklistCard({ className }) {
 
                 {!isConfigured && (
                   <Link href="/settings">
-                    <button className="flex items-center gap-1 text-xs text-[#818CF8] hover:text-white hover:underline font-semibold transition">
+                    <button className="flex items-center gap-1 text-xs text-[#FBBF24] hover:text-white hover:underline font-bold transition">
                       <span>Configurar</span>
                       <ArrowRight size={12} />
                     </button>
