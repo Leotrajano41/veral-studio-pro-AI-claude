@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn } from '../lib/utils';
+import SetupChecklist from '../components/SetupChecklist';
 
 // ────────────────────────────────────────────────────────────
 // Constants
@@ -287,6 +288,8 @@ export default function SettingsPage() {
         {/* ── ABA 3: API KEYS ── */}
         {activeTab === 'keys' && (
           <div className="space-y-4">
+            {/* SetupChecklist Component (Prompt 4 - Item 10, 11, 12) */}
+            <SetupChecklist isCompact={true} />
             {/* Summary Checklist Banner (Prompt 4 - Item 2) */}
             <div className="p-4 rounded-card border border-border bg-bg-secondary space-y-3 shadow-card">
               <div className="flex items-center justify-between flex-wrap gap-2">

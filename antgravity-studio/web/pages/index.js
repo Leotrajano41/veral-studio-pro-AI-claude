@@ -3,7 +3,7 @@ import HeroSection from '../components/home/HeroSection';
 import FeaturesGrid from '../components/home/FeaturesGrid';
 import CTASection from '../components/home/CTASection';
 import StatusCard from '../components/StatusCard';
-import SetupChecklistCard from '../components/home/SetupChecklistCard';
+import SetupChecklist from '../components/SetupChecklist';
 import OnboardingTour from '../components/onboarding/OnboardingTour';
 import ProgressDotsWidget from '../components/onboarding/ProgressDotsWidget';
 import OnboardingAnimations from '../components/onboarding/OnboardingAnimations';
@@ -50,7 +50,7 @@ export default function Home() {
         <StatusCard />
 
         {/* CHECKLIST DE SETUP - RASTREAMENTO DE APIs */}
-        <SetupChecklistCard />
+        <SetupChecklist />
 
         {/* Progress Dots Animation Widget */}
         <ProgressDotsWidget />
