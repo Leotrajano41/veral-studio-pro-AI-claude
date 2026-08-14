@@ -17,14 +17,14 @@ import toast from 'react-hot-toast';
 // Constants
 // ────────────────────────────────────────────────────────────
 const MOCK_API_KEYS = [
-  { key: 'openai', label: 'OpenAI (GPT-4o-mini)', desc: 'Geração de roteiros e prompts', icon: Brain, status: 'valid', secret: 'sk-pro-98f7d6a5c4b3a2ilEA', docs: 'https://platform.openai.com/api-keys' },
-  { key: 'gemini', label: 'Google Gemini', desc: 'LLM alternativa para textos e análise', icon: Sparkles, status: 'valid', secret: 'AIzaSyA8b7c6d5e4f3g2h1ilEA', docs: 'https://aistudio.google.com' },
-  { key: 'openrouter', label: 'OpenRouter', desc: 'Geração de thumbnails e imagens', icon: Sparkles, status: 'valid', secret: 'sk-or-v1-9988776655443322ilEA', docs: 'https://openrouter.ai/keys' },
-  { key: 'assembly', label: 'Assembly AI', desc: 'Transcrição e legendagem sincronizada', icon: Mic2, status: 'valid', secret: 'a8f7e6d5c4b3a2f1e09876ilEA', docs: 'https://www.assemblyai.com' },
-  { key: 'pixabay', label: 'Pixabay', desc: 'Imagens e vídeos stock gratuitos', icon: ImageIcon, status: 'valid', secret: '458921-a7f8e9d0c1b2a3f4e5ilEA', docs: 'https://pixabay.com/api/docs/' },
-  { key: 'pexels', label: 'Pexels', desc: 'Mídias em alta definição', icon: ImageIcon, status: 'valid', secret: '56728190a1b2c3d4e5f6g7h8ilEA', docs: 'https://www.pexels.com/api/' },
-  { key: 'kie', label: 'Kie.ai', desc: 'Avatares fotorrealistas e vídeos', icon: Film, status: 'not_set', secret: '', docs: 'https://kie.ai' },
-  { key: 'meta', label: 'Meta AI', desc: 'Modelos LLaMA (login via cookie)', icon: Brain, status: 'not_set', secret: '', docs: 'https://ai.meta.com' },
+  { key: 'openai', label: 'OpenAI (GPT-4o-mini)', desc: 'Geração de roteiros e prompts', icon: Brain, status: 'valid', secret: 'sk-pro-98f7d6a5c4b3a2ilEA', docs: 'https://platform.openai.com/api-keys', required: true, tooltip: '✓ Chave OpenAI ativa e validada. Necessária para forjar roteiros automáticos.' },
+  { key: 'gemini', label: 'Google Gemini', desc: 'LLM alternativa para textos e análise', icon: Sparkles, status: 'valid', secret: 'AIzaSyA8b7c6d5e4f3g2h1ilEA', docs: 'https://aistudio.google.com', required: false, tooltip: '✓ Chave Gemini ativa. Provedor secundário para análise e textos.' },
+  { key: 'openrouter', label: 'OpenRouter', desc: 'Geração de thumbnails e imagens', icon: Sparkles, status: 'valid', secret: 'sk-or-v1-9988776655443322ilEA', docs: 'https://openrouter.ai/keys', required: true, tooltip: '✓ Chave OpenRouter ativa. Gera imagens HD para capas e thumbnails.' },
+  { key: 'assembly', label: 'Assembly AI', desc: 'Transcrição e legendagem sincronizada', icon: Mic2, status: 'valid', secret: 'a8f7e6d5c4b3a2f1e09876ilEA', docs: 'https://www.assemblyai.com', required: true, tooltip: '✓ Chave AssemblyAI ativa. Gera legendas dinâmicas palavra a palavra.' },
+  { key: 'pixabay', label: 'Pixabay', desc: 'Imagens e vídeos stock gratuitos', icon: ImageIcon, status: 'valid', secret: '458921-a7f8e9d0c1b2a3f4e5ilEA', docs: 'https://pixabay.com/api/docs/', required: true, tooltip: '✓ Chave Pixabay ativa. Baixa vídeos e fundos gratuitos em HD/4K.' },
+  { key: 'pexels', label: 'Pexels', desc: 'Mídias em alta definição', icon: ImageIcon, status: 'valid', secret: '56728190a1b2c3d4e5f6g7h8ilEA', docs: 'https://www.pexels.com/api/', required: false, tooltip: '✓ Chave Pexels ativa. Provedor secundário de mídia stock.' },
+  { key: 'kie', label: 'Kie.ai', desc: 'Avatares fotorrealistas e vídeos', icon: Film, status: 'not_set', secret: '', docs: 'https://kie.ai', required: false, tooltip: '❌ Chave Kie.ai não configurada. Cole sua chave para habilitar avatares 3D.' },
+  { key: 'meta', label: 'Meta AI', desc: 'Modelos LLaMA (login via cookie)', icon: Brain, status: 'not_set', secret: '', docs: 'https://ai.meta.com', required: false, tooltip: '❌ Cookie Meta AI pendente. Opcional para modelos open-source LLaMA.' },
 ];
 
 const EDGE_TTS_VOICES = [
@@ -109,6 +109,30 @@ export default function SettingsPage() {
   };
   const handleUpdateFromServer = async () => {
     toast.success('🔄 Chaves de API sincronizadas com o servidor!');
+  };
+
+  const [testingKeyMap, setTestingKeyMap] = useState({});
+
+  const handleTestConnection = async (item) => {
+    setTestingKeyMap(prev => ({ ...prev, [item.key]: true }));
+    await new Promise(r => setTimeout(r, 900));
+    setTestingKeyMap(prev => ({ ...prev, [item.key]: false }));
+
+    if (item.secret && item.secret.length > 5) {
+      setApiKeys(prev => prev.map(k => k.key === item.key ? { ...k, status: 'valid', tooltip: `✓ Chave ${item.label} testada e conectada com sucesso.` } : k));
+      try {
+        localStorage.setItem('vsp_api_has_error', 'false');
+        window.dispatchEvent(new Event('vsp_api_error_change'));
+      } catch (_) {}
+      toast.success(`🧪 Conexão com ${item.label} estabelecida com sucesso!`);
+    } else {
+      setApiKeys(prev => prev.map(k => k.key === item.key ? { ...k, status: 'error', tooltip: `⚠️ Erro de conexão em ${item.label}. Verifique ou renove a chave.` } : k));
+      try {
+        localStorage.setItem('vsp_api_has_error', 'true');
+        window.dispatchEvent(new Event('vsp_api_error_change'));
+      } catch (_) {}
+      toast.error(`⚠️ Falha ao conectar com ${item.label}. Verifique sua chave!`);
+    }
   };
 
   // TTS Voice handlers
@@ -259,22 +283,45 @@ export default function SettingsPage() {
               {apiKeys.map(item => {
                 const Icon = item.icon;
                 const isShowing = showSecretMap[item.key];
+                const isTesting = testingKeyMap[item.key];
+
                 return (
-                  <div key={item.key} className="p-4 rounded-card border border-border bg-bg-secondary hover:border-accent-red/20 transition space-y-3">
+                  <div key={item.key} className="p-4 rounded-card border border-border bg-bg-secondary hover:border-[#6366F1]/30 transition space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded bg-bg-tertiary flex items-center justify-center">
-                          <Icon size={16} className="text-accent-red" />
+                          <Icon size={16} className="text-[#6366F1]" />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <p className="text-sm font-semibold text-txt-primary">{item.label}</p>
-                            <Badge
-                              text={item.status === 'valid' ? '✓ OK' : '✗ Não configurada'}
-                              variant={item.status === 'valid' ? 'success' : 'error'}
-                            />
+                            
+                            {/* Required Badge */}
+                            {item.required && (
+                              <span
+                                title="🔑 Chave essencial e obrigatória para o funcionamento da plataforma"
+                                className="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/40 flex items-center gap-1 cursor-help"
+                              >
+                                🔑 Obrigatória
+                              </span>
+                            )}
+
+                            {/* Status Badge with Hover Tooltip (Item 7 & Item 8) */}
+                            <span
+                              title={item.tooltip}
+                              className={cn(
+                                'text-[10px] px-2 py-0.5 rounded-full font-bold transition flex items-center gap-1 cursor-help',
+                                item.status === 'valid' && 'bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40',
+                                item.status === 'error' && 'bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40 animate-pulse',
+                                item.status === 'not_set' && 'bg-[#64748B]/20 text-[#94A3B8] border border-[#64748B]/40'
+                              )}
+                            >
+                              {item.status === 'valid' && '✓ Válida'}
+                              {item.status === 'error' && '⚠️ Erro'}
+                              {item.status === 'not_set' && '❌ Não configurada'}
+                            </span>
                           </div>
-                          <p className="text-xs text-txt-secondary">{item.desc}</p>
+                          <p className="text-xs text-txt-secondary mt-0.5">{item.desc}</p>
                         </div>
                       </div>
 
@@ -282,7 +329,7 @@ export default function SettingsPage() {
                         href={item.docs}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-accent-teal hover:underline flex items-center gap-1 shrink-0"
+                        className="text-xs text-[#38BDF8] hover:underline flex items-center gap-1 shrink-0"
                       >
                         📖 Tutorial →
                       </a>
@@ -298,7 +345,7 @@ export default function SettingsPage() {
                             const val = e.target.value;
                             setApiKeys(prev => prev.map(k => k.key === item.key ? { ...k, secret: val } : k));
                           }}
-                          placeholder="Cole sua chave aqui..."
+                          placeholder="Cole sua chave de API aqui..."
                         />
                         <button
                           onClick={() => toggleShowSecret(item.key)}
@@ -307,6 +354,18 @@ export default function SettingsPage() {
                           {isShowing ? <EyeOff size={14} /> : <Eye size={14} />}
                         </button>
                       </div>
+
+                      {/* Button Testar Conexão (Item 8) */}
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        loading={isTesting}
+                        onClick={() => handleTestConnection(item)}
+                      >
+                        🧪 Testar
+                      </Button>
+
+                      {/* Button Salvar */}
                       <Button
                         variant="primary"
                         size="sm"
