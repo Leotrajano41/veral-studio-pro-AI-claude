@@ -43,6 +43,17 @@ function maskKey(str) {
   return `${str.slice(0, 5)}...${str.slice(-4)}`;
 }
 
+function validateKeyFormat(key, value) {
+  if (!value || value.trim().length === 0) return null;
+  const str = value.trim();
+  if (key === 'openai') return str.startsWith('sk-') || str.length > 18;
+  if (key === 'gemini') return str.startsWith('AIza') || str.length > 18;
+  if (key === 'openrouter') return str.startsWith('sk-or-') || str.length > 18;
+  if (key === 'assembly') return str.length > 15;
+  if (key === 'pixabay') return str.length > 10;
+  return str.length > 8;
+}
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('keys'); // 'backup' | 'licenca' | 'keys' | 'tts' | 'cache' | 'sobre'
   const { animationsDisabled, setAnimationsDisabled, resetOnboarding } = useOnboarding();
@@ -411,7 +422,11 @@ export default function SettingsPage() {
                       <div className="flex-1 relative">
                         <input
                           type={isShowing ? 'text' : 'password'}
-                          className="input-base font-mono text-xs pr-9"
+                          className={cn(
+                            'input-base font-mono text-xs pr-9 transition-colors',
+                            item.secret && validateKeyFormat(item.key, item.secret) === false && 'border-[#EF4444] text-[#EF4444]',
+                            item.secret && validateKeyFormat(item.key, item.secret) === true && 'border-[#10B981]'
+                          )}
                           value={isShowing ? item.secret : maskKey(item.secret)}
                           onChange={e => {
                             const val = e.target.value;
@@ -425,6 +440,21 @@ export default function SettingsPage() {
                         >
                           {isShowing ? <EyeOff size={14} /> : <Eye size={14} />}
                         </button>
+
+                        {/* Live format validation indicator (Prompt 4 - Item 8) */}
+                        {item.secret && item.secret.length > 0 && (() => {
+                          const isValid = validateKeyFormat(item.key, item.secret);
+                          if (isValid === null) return null;
+                          return isValid ? (
+                            <span className="text-[10px] text-[#10B981] font-mono font-bold flex items-center gap-1 mt-1">
+                              ✓ Formato válido
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-[#EF4444] font-mono font-bold flex items-center gap-1 mt-1">
+                              ✗ Formato inválido
+                            </span>
+                          );
+                        })()}
                       </div>
 
                       {/* Button Testar Conexão (Item 8) */}

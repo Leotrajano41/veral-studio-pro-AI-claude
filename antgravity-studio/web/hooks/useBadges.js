@@ -2,24 +2,55 @@ import { useState, useEffect, useCallback } from 'react';
 
 const STORAGE_KEYS = {
   HISTORY: 'vsp_api_status_history',
+  DATES: 'api_configured_dates',
   NOVO_SEEN: 'badge_novo_visto',
 };
 
 const BADGE_EVENT = 'vsp_badge_status_change';
 
 const DEFAULT_STATUS_MAP = {
-  openai: { status: 'active', last_checked: '2026-08-14' },
-  gemini: { status: 'active', last_checked: '2026-08-14' },
-  openrouter: { status: 'active', last_checked: '2026-08-14' },
-  assembly: { status: 'active', last_checked: '2026-08-14' },
-  pixabay: { status: 'active', last_checked: '2026-08-14' },
-  pexels: { status: 'pending', last_checked: null },
-  kie: { status: 'pending', last_checked: null },
-  meta: { status: 'pending', last_checked: null },
+  openai: { status: 'active', last_checked: '2026-08-14', exp_days: 90 },
+  gemini: { status: 'active', last_checked: '2026-08-14', exp_days: null },
+  openrouter: { status: 'active', last_checked: '2026-08-14', exp_days: null },
+  assembly: { status: 'active', last_checked: '2026-08-14', exp_days: null },
+  pixabay: { status: 'active', last_checked: '2026-08-14', exp_days: 30 },
+  pexels: { status: 'pending', last_checked: null, exp_days: null },
+  kie: { status: 'pending', last_checked: null, exp_days: null },
+  meta: { status: 'pending', last_checked: null, exp_days: null },
 };
+
+const DEFAULT_DATES_MAP = {
+  openai: '2026-08-14',
+  gemini: '2026-08-14',
+  openrouter: '2026-08-14',
+  assembly: '2026-08-14',
+  pixabay: '2026-08-14',
+  pexels: null,
+  kie: null,
+  meta: null,
+};
+
+export function formatConfiguredDate(dateStr) {
+  if (!dateStr) return null;
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parts[0];
+      const monthIndex = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const months = [
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+      ];
+      return `Configurada em ${day} de ${months[monthIndex]} de ${year}`;
+    }
+  } catch (_) {}
+  return `Configurada em ${dateStr}`;
+}
 
 export default function useBadges() {
   const [statusHistory, setStatusHistory] = useState({ api_status: DEFAULT_STATUS_MAP });
+  const [configuredDates, setConfiguredDates] = useState({ api_configured_dates: DEFAULT_DATES_MAP });
   const [novoBadgeSeen, setNovoBadgeSeen] = useState(false);
 
   // Sync state from localStorage
@@ -35,10 +66,19 @@ export default function useBadges() {
       if (rawHistory) {
         setStatusHistory(JSON.parse(rawHistory));
       } else {
-        // Initialize default history in localStorage
         const initialObj = { api_status: DEFAULT_STATUS_MAP };
         localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(initialObj));
         setStatusHistory(initialObj);
+      }
+
+      // 3. Sync Configured Dates Schema (Prompt 4 - Item 5)
+      const rawDates = localStorage.getItem(STORAGE_KEYS.DATES);
+      if (rawDates) {
+        setConfiguredDates(JSON.parse(rawDates));
+      } else {
+        const initialDates = { api_configured_dates: DEFAULT_DATES_MAP };
+        localStorage.setItem(STORAGE_KEYS.DATES, JSON.stringify(initialDates));
+        setConfiguredDates(initialDates);
       }
     } catch (e) {
       console.error('useBadges: erro ao sincronizar localStorage', e);
@@ -58,13 +98,11 @@ export default function useBadges() {
     }
   };
 
-  // Active essential APIs count (OpenAI, Gemini, OpenRouter, AssemblyAI, Pixabay)
   const activeApis = ['openai', 'gemini', 'openrouter', 'assembly', 'pixabay'];
   const configuredCount = activeApis.filter(
     (key) => statusHistory.api_status?.[key]?.status === 'active'
   ).length;
 
-  // Check if any active API has error status
   const hasError = Object.values(statusHistory.api_status || {}).some(
     (item) => item.status === 'error'
   );
@@ -76,23 +114,31 @@ export default function useBadges() {
       const prevHistory = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.HISTORY) || '{"api_status":{}}'
       );
+      const prevDates = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.DATES) || '{"api_configured_dates":{}}'
+      );
 
-      const updatedMap = {
+      const updatedHistoryMap = {
         ...prevHistory.api_status,
         [apiKey]: {
-          status, // 'active' | 'pending' | 'error'
+          status,
           last_checked: status === 'active' ? today : prevHistory.api_status?.[apiKey]?.last_checked || null,
+          exp_days: apiKey === 'pixabay' ? 30 : apiKey === 'openai' ? 90 : null,
           ...(errorMsg ? { error_msg: errorMsg } : {}),
         },
       };
 
-      const newHistory = { api_status: updatedMap };
-      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(newHistory));
+      const updatedDatesMap = {
+        ...prevDates.api_configured_dates,
+        [apiKey]: status === 'active' ? today : null,
+      };
 
-      // Also update vsp_configured_apis_count
-      const newActiveCount = activeApis.filter((k) => updatedMap[k]?.status === 'active').length;
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify({ api_status: updatedHistoryMap }));
+      localStorage.setItem(STORAGE_KEYS.DATES, JSON.stringify({ api_configured_dates: updatedDatesMap }));
+
+      const newActiveCount = activeApis.filter((k) => updatedHistoryMap[k]?.status === 'active').length;
       localStorage.setItem('vsp_configured_apis_count', newActiveCount.toString());
-      localStorage.setItem('vsp_api_has_error', Object.values(updatedMap).some((x) => x.status === 'error') ? 'true' : 'false');
+      localStorage.setItem('vsp_api_has_error', Object.values(updatedHistoryMap).some((x) => x.status === 'error') ? 'true' : 'false');
     } catch (e) {
       console.error('useBadges: erro ao atualizar API status', e);
     }
@@ -115,11 +161,13 @@ export default function useBadges() {
 
   return {
     statusHistory,
+    configuredDates,
     configuredCount,
     hasError,
     novoBadgeSeen,
     updateApiStatus,
     deleteApiKey,
     markNovoSeen,
+    formatConfiguredDate,
   };
 }
