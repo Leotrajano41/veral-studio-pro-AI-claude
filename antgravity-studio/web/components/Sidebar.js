@@ -7,6 +7,7 @@ import {
   FolderOpen, Film, Tv, Settings, BookOpen, ChevronLeft, ChevronRight, ArrowLeft
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import useOnboarding from '../hooks/useOnboarding';
 
 const SPOTLIGHT_KEY = 'vsp_sidebar_spotlight_seen';
 const ARROW_KEY = 'vsp_sidebar_arrow_clicked';
@@ -14,12 +15,12 @@ const WIZARD_KEY = 'vsp_wizard_completed';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/settings', label: 'Configurações', icon: Settings, spotlightTarget: true },
-  { href: '/trends', label: 'Tendências', icon: TrendingUp },
+  { href: '/settings', label: 'Configurações', icon: Settings, stepId: 1 },
+  { href: '/trends', label: 'Tendências', icon: TrendingUp, stepId: 2 },
   { href: '/news', label: 'Notícias', icon: Newspaper },
-  { href: '/projects', label: 'Projetos', icon: FolderKanban },
+  { href: '/projects', label: 'Projetos', icon: FolderKanban, stepId: 3 },
   { href: '/queue', label: 'Fila', icon: ListOrdered },
-  { href: '/pipeline', label: 'Pipeline Mágico', icon: Zap, badge: 'HOT' },
+  { href: '/pipeline', label: 'Pipeline Mágico', icon: Zap, badge: 'HOT', stepId: 4 },
   { href: '/scripts', label: 'Roteiros', icon: ScrollText },
   { href: '/voiceovers', label: 'Narrações', icon: Mic2 },
   { href: '/medias', label: 'Mídias', icon: ImageIcon },
@@ -37,14 +38,15 @@ export default function Sidebar() {
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [showArrowPointer, setShowArrowPointer] = useState(false);
 
+  const { currentStep, step1Completed, animationsDisabled, completeStep } = useOnboarding();
+
   // Activate spotlight and arrow pointer for first-time users
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || animationsDisabled) return;
     const wizardDone = localStorage.getItem(WIZARD_KEY) === 'true';
     const spotlightSeen = localStorage.getItem(SPOTLIGHT_KEY) === 'true';
     const arrowClicked = localStorage.getItem(ARROW_KEY) === 'true';
 
-    // Show spotlight if wizard is NOT completed AND spotlight hasn't been seen
     if (!wizardDone && !spotlightSeen) {
       const showTimer = setTimeout(() => setShowSpotlight(true), 1200);
       const hideTimer = setTimeout(() => {
@@ -58,15 +60,17 @@ export default function Sidebar() {
       };
     }
 
-    // Show arrow pointer if not clicked yet and not on /settings
-    if (!arrowClicked && router.pathname !== '/settings') {
+    if (!arrowClicked && !step1Completed && router.pathname !== '/settings') {
       setShowArrowPointer(true);
     }
-  }, [router.pathname]);
+  }, [router.pathname, animationsDisabled, step1Completed]);
 
   // Dismiss arrow pointer and spotlight when user navigates to /settings or clicks
-  const handleNavClick = (href) => {
-    if (href === '/settings') {
+  const handleNavClick = (item) => {
+    if (item.stepId) {
+      completeStep(item.stepId);
+    }
+    if (item.href === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
       try {
@@ -80,12 +84,13 @@ export default function Sidebar() {
     if (router.pathname === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
+      completeStep(1);
       try {
         localStorage.setItem(SPOTLIGHT_KEY, 'true');
         localStorage.setItem(ARROW_KEY, 'true');
       } catch (_) {}
     }
-  }, [router.pathname]);
+  }, [router.pathname, completeStep]);
 
   return (
     <>
@@ -112,14 +117,16 @@ export default function Sidebar() {
               (item.href === '/voiceovers' && router.pathname === '/narrations') ||
               (item.href === '/medias' && router.pathname === '/media');
             const Icon = item.icon;
-            const isSpotlit = showSpotlight && item.spotlightTarget && !active;
-            const isArrowTarget = showArrowPointer && item.spotlightTarget && !active;
+
+            const isCurrentOnboardingStep = !animationsDisabled && item.stepId === currentStep && !active;
+            const isSpotlit = showSpotlight && item.stepId === 1 && !active && !animationsDisabled;
+            const isArrowTarget = showArrowPointer && item.stepId === 1 && !active && !animationsDisabled;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => handleNavClick(item.href)}
+                onClick={() => handleNavClick(item)}
                 title={collapsed ? item.label : undefined}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2 rounded-card text-xs font-semibold transition relative group',
@@ -127,6 +134,7 @@ export default function Sidebar() {
                     ? 'bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white shadow-glow'
                     : 'text-[#94A3B8] hover:text-white hover:bg-[#1E293B]',
                   isSpotlit && 'sidebar-spotlight',
+                  isCurrentOnboardingStep && 'animate-onboarding-pulse border border-[#7C3AED]',
                   isArrowTarget && 'border border-[#6366F1]/40'
                 )}
               >
@@ -143,8 +151,8 @@ export default function Sidebar() {
                 )}
 
                 {/* Animated Arrow Pointing Tooltip Badge */}
-                {isArrowTarget && (
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#6366F1] to-[#8B5CF6] text-white text-[11px] font-bold shadow-lg pointer-events-none z-50 animate-bounce-horizontal whitespace-nowrap border border-white/20">
+                {isArrowTarget && !collapsed && (
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white text-[11px] font-bold shadow-lg pointer-events-none z-50 animate-bounce-horizontal whitespace-nowrap border border-white/20">
                     <ArrowLeft size={13} className="animate-pulse" />
                     <span>Configure aqui</span>
                   </div>
@@ -160,24 +168,25 @@ export default function Sidebar() {
         {navItems.slice(0, 5).map((item) => {
           const active = router.pathname === item.href;
           const Icon = item.icon;
-          const isSpotlit = showSpotlight && item.spotlightTarget && !active;
-          const isArrowTarget = showArrowPointer && item.spotlightTarget && !active;
+          const isSpotlit = showSpotlight && item.stepId === 1 && !active && !animationsDisabled;
+          const isArrowTarget = showArrowPointer && item.stepId === 1 && !active && !animationsDisabled;
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => handleNavClick(item.href)}
+              onClick={() => handleNavClick(item)}
               className={cn(
                 'flex flex-col items-center gap-0.5 p-1 rounded text-[10px] font-semibold transition relative',
                 active ? 'text-[#6366F1]' : 'text-[#94A3B8]',
-                isSpotlit && 'sidebar-spotlight'
+                isSpotlit && 'sidebar-spotlight',
+                !animationsDisabled && item.stepId === currentStep && 'animate-onboarding-pulse'
               )}
             >
               <Icon size={18} />
               <span>{item.label.split(' ')[0]}</span>
               {isArrowTarget && (
-                <span className="absolute -top-6 bg-[#6366F1] text-white text-[9px] px-1.5 py-0.5 rounded font-bold animate-bounce shadow">
+                <span className="absolute -top-6 bg-[#7C3AED] text-white text-[9px] px-1.5 py-0.5 rounded font-bold animate-bounce shadow">
                   ⚙️
                 </span>
               )}
@@ -189,9 +198,9 @@ export default function Sidebar() {
       {/* Spotlight & Arrow Animation Styles */}
       <style jsx global>{`
         @keyframes sidebarSpotlightPulse {
-          0%   { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); background-color: rgba(99, 102, 241, 0.08); }
-          50%  { box-shadow: 0 0 16px 4px rgba(99, 102, 241, 0.45), 0 0 30px 8px rgba(139, 92, 246, 0.2); background-color: rgba(99, 102, 241, 0.15); }
-          100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); background-color: rgba(99, 102, 241, 0.08); }
+          0%   { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.6); background-color: rgba(124, 58, 237, 0.08); }
+          50%  { box-shadow: 0 0 16px 4px rgba(124, 58, 237, 0.45), 0 0 30px 8px rgba(139, 92, 246, 0.2); background-color: rgba(124, 58, 237, 0.15); }
+          100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.6); background-color: rgba(124, 58, 237, 0.08); }
         }
         @keyframes bounceHorizontal {
           0%, 100% { transform: translateY(-50%) translateX(0); }
@@ -199,7 +208,7 @@ export default function Sidebar() {
         }
         .sidebar-spotlight {
           animation: sidebarSpotlightPulse 1s ease-in-out 3;
-          border: 1px solid rgba(99, 102, 241, 0.4) !important;
+          border: 1px solid rgba(124, 58, 237, 0.4) !important;
           color: #E0E7FF !important;
         }
         .animate-bounce-horizontal {
@@ -209,5 +218,6 @@ export default function Sidebar() {
     </>
   );
 }
+
 
 

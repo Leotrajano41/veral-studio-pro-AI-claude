@@ -1,0 +1,102 @@
+/* Custom Keyframe Animations for Onboarding Visual Guidance System */
+
+@keyframes onboardingPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(124, 58, 237, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
+  }
+}
+
+@keyframes onboardingGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(124, 58, 237, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.95));
+  }
+}
+
+@keyframes onboardingBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes onboardingFadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  88% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes onboardingSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes handTap {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.85;
+  }
+  30% {
+    transform: scale(0.8) translate(-3px, 3px);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.05) translate(1px, -1px);
+    opacity: 1;
+  }
+}
+
+/* Utility Animation Classes */
+.animate-onboarding-pulse {
+  animation: onboardingPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+  border-color: rgba(124, 58, 237, 0.8) !important;
+}
+
+.animate-onboarding-glow {
+  animation: onboardingGlow 2s ease-in-out infinite !important;
+}
+
+.animate-onboarding-bounce {
+  animation: onboardingBounce 1.5s ease-in-out infinite !important;
+}
+
+.animate-onboarding-fade-in-out {
+  animation: onboardingFadeInOut 5s ease-in-out forwards !important;
+}
+
+.animate-onboarding-slide-in {
+  animation: onboardingSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.animate-hand-tap {
+  animation: handTap 1.2s ease-in-out infinite !important;
+}

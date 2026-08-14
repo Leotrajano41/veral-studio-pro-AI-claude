@@ -3,11 +3,13 @@ import Layout from '../components/Layout';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
+import useOnboarding from '../hooks/useOnboarding';
+import { resetWizard } from '../hooks/useWizard';
 import {
   Settings, Key, ShieldCheck, Download, Upload, RefreshCw,
   Trash2, HelpCircle, Globe, Mic2, Brain, Sparkles, Youtube,
   Film, Image as ImageIcon, CheckCircle2, XCircle, Eye, EyeOff,
-  Save, AlertTriangle, Layers, Info, Check, HardDrive, Lock,
+  Save, AlertTriangle, Layers, Info, Check, HardDrive, Lock, RotateCcw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -42,6 +44,7 @@ function maskKey(str) {
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('keys'); // 'backup' | 'licenca' | 'keys' | 'tts' | 'cache' | 'sobre'
+  const { animationsDisabled, setAnimationsDisabled, resetOnboarding } = useOnboarding();
 
   // ABA 1 - BACKUP
   const fileInputRef = useRef(null);
@@ -139,12 +142,13 @@ export default function SettingsPage() {
           <Badge text="v2.0 PRO" variant="error" />
         </div>
 
-        {/* ── 6 Abas ── */}
+        {/* ── 7 Abas ── */}
         <div className="flex gap-1 bg-bg-secondary p-1 rounded-card border border-border overflow-x-auto">
           {[
+            { id: 'keys', label: '🔑 API Keys' },
+            { id: 'interface', label: '🎨 Interface & Animações' },
             { id: 'backup', label: '💾 Backup & Restore' },
             { id: 'licenca', label: '🔒 Licença' },
-            { id: 'keys', label: '🔑 API Keys' },
             { id: 'tts', label: '🎙️ Vozes TTS' },
             { id: 'cache', label: '🗑️ Cache Manager' },
             { id: 'sobre', label: 'ℹ️ Sobre' },
@@ -308,6 +312,56 @@ export default function SettingsPage() {
               })}
             </div>
           </div>
+        )}
+
+        {/* ── ABA INTERFACE & ANIMAÇÕES ── */}
+        {activeTab === 'interface' && (
+          <Card title="🎨 Interface, Onboarding & Animações Visuais">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-4 rounded-card border border-border bg-bg-secondary">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-bold text-txt-primary flex items-center gap-2">
+                    {animationsDisabled ? <EyeOff size={16} className="text-error" /> : <Eye size={16} className="text-success" />}
+                    Animações Visuais do Onboarding
+                  </h3>
+                  <p className="text-xs text-txt-secondary">
+                    Controla o aparecimento de ferramentas de destaque (spotlight, tooltips flutuantes, setas e bordas pulsantes em roxo #7c3aed).
+                  </p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={animationsDisabled}
+                    onChange={e => {
+                      setAnimationsDisabled(e.target.checked);
+                      toast.success(e.target.checked ? '🚫 Tutorial visual desabilitado!' : '✨ Tutorial visual ativado!');
+                    }}
+                    className="w-5 h-5 rounded border-border bg-bg-tertiary text-accent-red accent-accent-red cursor-pointer"
+                  />
+                  <span className="text-xs font-semibold text-txt-primary">
+                    Desabilitar tutorial visual
+                  </span>
+                </label>
+              </div>
+
+              <div className="p-4 rounded-card border border-border bg-bg-secondary flex items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-xs font-bold text-txt-primary">Reiniciar Guias & Tutorial de Boas-Vindas</h4>
+                  <p className="text-[11px] text-txt-secondary mt-0.5">
+                    Limpa o histórico de conclusões salvas no navegador para rever a experiência inicial completa.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="secondary" size="sm" onClick={() => { resetWizard(); toast.success('🧙 Wizard reiniciado!'); }}>
+                    <RotateCcw size={14} /> Wizard de 5 Passos
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={() => { resetOnboarding(); toast.success('🔄 Onboarding zerado!'); }}>
+                    <RefreshCw size={14} /> Zerar Passos
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
         )}
 
         {/* ── ABA 4: VOZES TTS ── */}
