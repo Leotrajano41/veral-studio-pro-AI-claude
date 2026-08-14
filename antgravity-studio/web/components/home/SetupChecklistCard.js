@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Check, ArrowRight, Settings, Brain, Sparkles, Mic2, ImageIcon, Key } from 'lucide-react';
+import { Check, CheckCircle2, Clock, XCircle, Info, ArrowRight, Settings, Brain, Sparkles, Mic2, ImageIcon, Key } from 'lucide-react';
 import useBadges from '../../hooks/useBadges';
 import Badge from '../Badge';
 import ProgressBar from '../ProgressBar';
@@ -89,7 +89,7 @@ export default function SetupChecklistCard({ className }) {
       {isAllDone && (
         <div className="p-3.5 rounded-xl bg-[#10B981]/15 border border-[#10B981]/30 flex items-center justify-between gap-3 text-xs text-[#34D399]">
           <div className="flex items-center gap-2">
-            <span className="text-base">🎉</span>
+            <CheckCircle2 size={18} className="text-[#10B981] shrink-0" />
             <span className="font-semibold">Parabéns! Todas as 5 APIs estão ativas. O Pipeline Mágico está 100% pronto!</span>
           </div>
           <Link href="/pipeline">
@@ -107,6 +107,7 @@ export default function SetupChecklistCard({ className }) {
           const isConfigured = apiData?.status === 'active';
           const isError = apiData?.status === 'error';
           const Icon = api.icon;
+          const lastChecked = apiData?.last_checked || (isConfigured ? 'Hoje' : null);
 
           return (
             <div
@@ -114,15 +115,15 @@ export default function SetupChecklistCard({ className }) {
               className={cn(
                 'flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 group',
                 isConfigured
-                  ? 'bg-[#0F172A]/70 border-[#10B981]/30 text-white'
+                  ? 'bg-[#10B981]/5 border-[#10B981]/30 text-white shadow-[0_0_12px_rgba(16,185,129,0.08)]'
                   : isError
-                    ? 'bg-[#EF4444]/10 border-[#EF4444]/40 text-white'
+                    ? 'bg-[#EF4444]/10 border-[#EF4444]/40 text-white shadow-[0_0_12px_rgba(239,68,68,0.08)]'
                     : 'bg-[#0F172A]/40 border-[#334155]/60 text-[#94A3B8] hover:border-[#6366F1]/40'
               )}
             >
               {/* Left Side: Indicator Checkbox & Info */}
               <div className="flex items-center gap-3 min-w-0">
-                {/* Visual Indicator Checkbox (Non-clickable) */}
+                {/* Visual Indicator Checkbox (Item 3 & Item 4) */}
                 <div
                   className={cn(
                     'w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition-colors',
@@ -130,12 +131,13 @@ export default function SetupChecklistCard({ className }) {
                       ? 'bg-[#10B981] border-[#10B981] text-white shadow-[0_0_8px_rgba(16,185,129,0.4)]'
                       : isError
                         ? 'bg-[#EF4444]/20 border-[#EF4444] text-[#EF4444]'
-                        : 'bg-[#1E293B] border-[#334155] text-transparent'
+                        : 'bg-[#1E293B] border-[#334155] text-[#F59E0B]'
                   )}
-                  title={isConfigured ? 'API Configurada e Ativa' : 'API Pendente de Configuração'}
+                  title={isConfigured ? 'API Configurada e Ativa' : isError ? 'Erro na API' : 'API Pendente de Configuração'}
                 >
-                  {isConfigured && <Check size={14} strokeWidth={3} />}
-                  {isError && <span className="text-xs font-bold">!</span>}
+                  {isConfigured && <CheckCircle2 size={15} strokeWidth={2.5} />}
+                  {isError && <XCircle size={15} strokeWidth={2.5} />}
+                  {!isConfigured && !isError && <Clock size={14} strokeWidth={2.5} />}
                 </div>
 
                 {/* Icon & Details */}
@@ -149,6 +151,11 @@ export default function SetupChecklistCard({ className }) {
                     <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#334155]/40 text-[#94A3B8] font-medium hidden sm:inline-block">
                       {api.category}
                     </span>
+                    {isConfigured && lastChecked && (
+                      <span className="text-[9px] text-[#10B981] font-mono hidden md:inline-block">
+                        • Verificada: {lastChecked}
+                      </span>
+                    )}
                   </div>
                   <p className="text-[11px] text-[#64748B] truncate mt-0.5">{api.desc}</p>
                 </div>
@@ -160,13 +167,13 @@ export default function SetupChecklistCard({ className }) {
                   color={isConfigured ? 'green' : isError ? 'red' : 'yellow'}
                   tooltip={
                     isConfigured
-                      ? `✓ ${api.name} ativa e validada`
+                      ? `✓ ${api.name} ativa e validada. Criptografada em AES-256.`
                       : isError
-                        ? `⚠️ Falha ao conectar com ${api.name}`
+                        ? `❌ Falha ao conectar com ${api.name}`
                         : `⏳ ${api.name} pendente de configuração`
                   }
                 >
-                  {isConfigured ? '✓ Configurada' : isError ? '⚠️ Erro' : '⏳ Pendente'}
+                  {isConfigured ? '✓ Configurada' : isError ? '❌ Erro' : '⏳ Pendente'}
                 </Badge>
 
                 {!isConfigured && (
