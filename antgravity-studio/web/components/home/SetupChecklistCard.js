@@ -117,23 +117,23 @@ export default function SetupChecklistCard({ className }) {
                 isConfigured
                   ? 'bg-[#10B981]/5 border-[#10B981]/30 text-white shadow-[0_0_12px_rgba(16,185,129,0.08)]'
                   : isError
-                    ? 'bg-[#EF4444]/10 border-[#EF4444]/40 text-white shadow-[0_0_12px_rgba(239,68,68,0.08)]'
+                    ? 'bg-[#EF4444]/10 border-[#EF4444]/40 text-white shadow-[0_0_12px_rgba(239,68,68,0.15)] hover:border-[#EF4444]/60'
                     : 'bg-[#F59E0B]/5 border-[#F59E0B]/25 text-[#94A3B8] hover:border-[#F59E0B]/50 shadow-[0_0_12px_rgba(245,158,11,0.04)]'
               )}
             >
               {/* Left Side: Indicator Checkbox & Info */}
               <div className="flex items-center gap-3 min-w-0">
-                {/* Visual Indicator Checkbox (Item 4.2 PENDENTE ⏳) */}
+                {/* Visual Indicator Checkbox (Item 4.3 ERRO ❌) */}
                 <div
                   className={cn(
                     'w-6 h-6 rounded-md border flex items-center justify-center shrink-0 transition-colors',
                     isConfigured
                       ? 'bg-[#10B981] border-[#10B981] text-white shadow-[0_0_8px_rgba(16,185,129,0.4)]'
                       : isError
-                        ? 'bg-[#EF4444]/20 border-[#EF4444] text-[#EF4444]'
+                        ? 'bg-[#EF4444]/20 border-[#EF4444] text-[#EF4444] shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse'
                         : 'bg-[#F59E0B]/20 border-[#F59E0B]/60 text-[#FBBF24] shadow-[0_0_8px_rgba(245,158,11,0.25)]'
                   )}
-                  title={isConfigured ? 'API Configurada e Ativa' : isError ? 'Erro na API' : 'API Pendente de Configuração (Clique em Configurar)'}
+                  title={isConfigured ? 'API Configurada e Ativa' : isError ? 'Erro de autenticação na API. Clique em Corrigir.' : 'API Pendente de Configuração (Clique em Configurar)'}
                 >
                   {isConfigured && <CheckCircle2 size={15} strokeWidth={2.5} />}
                   {isError && <XCircle size={15} strokeWidth={2.5} />}
@@ -156,6 +156,11 @@ export default function SetupChecklistCard({ className }) {
                         • Verificada: {lastChecked}
                       </span>
                     )}
+                    {isError && (
+                      <span className="text-[9px] text-[#EF4444] font-mono font-bold hidden md:inline-block">
+                        • Erro: {apiData?.error_msg || 'Chave com erro 401 ou expirada'}
+                      </span>
+                    )}
                     {!isConfigured && !isError && (
                       <span className="text-[9px] text-[#FBBF24] font-mono hidden md:inline-block">
                         • Status: Aguardando Chave
@@ -174,7 +179,7 @@ export default function SetupChecklistCard({ className }) {
                     isConfigured
                       ? `✓ ${api.name} ativa e validada. Criptografada em AES-256.`
                       : isError
-                        ? `❌ Falha ao conectar com ${api.name}`
+                        ? `❌ Falha ao conectar com ${api.name}. ${apiData?.error_msg || 'Clique em Corrigir para renovar.'}`
                         : `⏳ ${api.name} pendente. Clique em 'Configurar' para adicionar a chave.`
                   }
                 >
@@ -183,8 +188,13 @@ export default function SetupChecklistCard({ className }) {
 
                 {!isConfigured && (
                   <Link href="/settings">
-                    <button className="flex items-center gap-1 text-xs text-[#FBBF24] hover:text-white hover:underline font-bold transition">
-                      <span>Configurar</span>
+                    <button
+                      className={cn(
+                        'flex items-center gap-1 text-xs font-bold transition hover:underline',
+                        isError ? 'text-[#EF4444]' : 'text-[#FBBF24]'
+                      )}
+                    >
+                      <span>{isError ? 'Corrigir' : 'Configurar'}</span>
                       <ArrowRight size={12} />
                     </button>
                   </Link>
