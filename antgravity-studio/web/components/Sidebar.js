@@ -10,11 +10,12 @@ import { cn } from '../lib/utils';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/pipeline', label: 'Pipeline Mágico', icon: Zap, badge: 'HOT' },
-  { href: '/projects', label: 'Projetos', icon: FolderKanban },
-  { href: '/queue', label: 'Fila', icon: ListOrdered },
+  { href: '/settings', label: 'Configurações', icon: Settings },
   { href: '/trends', label: 'Tendências', icon: TrendingUp },
   { href: '/news', label: 'Notícias', icon: Newspaper },
+  { href: '/projects', label: 'Projetos', icon: FolderKanban },
+  { href: '/queue', label: 'Fila', icon: ListOrdered },
+  { href: '/pipeline', label: 'Pipeline Mágico', icon: Zap, badge: 'HOT' },
   { href: '/scripts', label: 'Roteiros', icon: ScrollText },
   { href: '/voiceovers', label: 'Narrações', icon: Mic2 },
   { href: '/medias', label: 'Mídias', icon: ImageIcon },
@@ -24,7 +25,6 @@ const navItems = [
   { href: '/vsl', label: 'VSL Cinematográfica', icon: Film, badge: '42 P' },
   { href: '/channels', label: 'Canais / Upload', icon: Tv },
   { href: '/docs', label: 'Documentação', icon: BookOpen },
-  { href: '/settings', label: 'Configurações', icon: Settings },
 ];
 
 export default function Sidebar() {
