@@ -198,26 +198,38 @@ export default function Sidebar() {
                   </span>
                 )}
 
-                {/* API Progress Badge (1/5 APIs com Bar Chart) - Shown when NOVO badge is not active */}
-                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && (
-                  <div className="ml-auto flex flex-col items-end gap-0.5 shrink-0">
-                    <span className={cn(
-                      'text-[9px] px-1.5 py-0.2 rounded font-extrabold flex items-center gap-1',
-                      apiCount >= 5
-                        ? 'bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40'
-                        : 'bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30'
-                    )}>
-                      {apiCount}/5 APIs {apiCount >= 5 ? '✓' : ''}
-                    </span>
-                    {/* Micro Progress Bar Chart */}
-                    <div className="w-9 h-1 bg-[#1E293B] rounded-full overflow-hidden border border-[#334155]">
-                      <div
-                        className="h-full bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#22C55E] transition-all duration-500"
-                        style={{ width: `${(Math.min(apiCount, 5) / 5) * 100}%` }}
-                      />
+                {/* API Progress Badge (Red 0-1, Orange 2-3, Green 4-5 / COMPLETO) */}
+                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && (() => {
+                  const isComplete = apiCount >= 5;
+                  const badgeStyle = isComplete
+                    ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 shadow-[0_0_8px_rgba(16,185,129,0.25)] font-extrabold'
+                    : apiCount >= 4
+                      ? 'bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/40 font-bold'
+                      : apiCount >= 2
+                        ? 'bg-[#f97316]/20 text-[#fb923c] border border-[#f97316]/40 font-bold'
+                        : 'bg-[#ef4444]/20 text-[#f87171] border border-[#ef4444]/40 font-bold';
+
+                  const barGradient = isComplete || apiCount >= 4
+                    ? 'from-[#10b981] to-[#34d399]'
+                    : apiCount >= 2
+                      ? 'from-[#f97316] to-[#fb923c]'
+                      : 'from-[#ef4444] to-[#f87171]';
+
+                  return (
+                    <div className="ml-auto flex flex-col items-end gap-0.5 shrink-0 cursor-pointer" title="Clique para gerenciar suas chaves de API">
+                      <span className={cn('text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors duration-300', badgeStyle)}>
+                        {isComplete ? '✅ COMPLETO' : `${apiCount}/5 APIs`}
+                      </span>
+                      {/* Micro Progress Bar Chart */}
+                      <div className="w-10 h-1 bg-[#1E293B] rounded-full overflow-hidden border border-[#334155]">
+                        <div
+                          className={cn('h-full bg-gradient-to-r transition-all duration-500', barGradient)}
+                          style={{ width: `${(Math.min(apiCount, 5) / 5) * 100}%` }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Animated Arrow Pointing Tooltip Badge */}
                 {isArrowTarget && !collapsed && (
