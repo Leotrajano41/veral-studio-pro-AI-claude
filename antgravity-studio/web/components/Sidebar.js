@@ -11,11 +11,12 @@ import useOnboarding from '../hooks/useOnboarding';
 
 const SPOTLIGHT_KEY = 'vsp_sidebar_spotlight_seen';
 const ARROW_KEY = 'vsp_sidebar_arrow_clicked';
+const NOVO_BADGE_KEY = 'badge_novo_visto';
 const WIZARD_KEY = 'vsp_wizard_completed';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/settings', label: 'Configurações', icon: Settings, stepId: 1 },
+  { href: '/settings', label: 'Configurações', icon: Settings, stepId: 1, dynamicBadge: 'novo' },
   { href: '/trends', label: 'Tendências', icon: TrendingUp, stepId: 2 },
   { href: '/news', label: 'Notícias', icon: Newspaper },
   { href: '/projects', label: 'Projetos', icon: FolderKanban, stepId: 3 },
@@ -37,8 +38,20 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [showArrowPointer, setShowArrowPointer] = useState(false);
+  const [showNovoBadge, setShowNovoBadge] = useState(true);
 
   const { currentStep, step1Completed, animationsDisabled, completeStep } = useOnboarding();
+
+  // Check badge_novo_visto in localStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const seen = localStorage.getItem(NOVO_BADGE_KEY) === 'true';
+    if (seen || router.pathname === '/settings') {
+      setShowNovoBadge(false);
+    } else {
+      setShowNovoBadge(true);
+    }
+  }, [router.pathname]);
 
   // Activate spotlight and arrow pointer for first-time users
   useEffect(() => {
@@ -65,7 +78,7 @@ export default function Sidebar() {
     }
   }, [router.pathname, animationsDisabled, step1Completed]);
 
-  // Dismiss arrow pointer and spotlight when user navigates to /settings or clicks
+  // Dismiss arrow pointer, spotlight, and NOVO badge when user navigates to /settings or clicks
   const handleNavClick = (item) => {
     if (item.stepId) {
       completeStep(item.stepId);
@@ -73,9 +86,11 @@ export default function Sidebar() {
     if (item.href === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
+      setShowNovoBadge(false);
       try {
         localStorage.setItem(SPOTLIGHT_KEY, 'true');
         localStorage.setItem(ARROW_KEY, 'true');
+        localStorage.setItem(NOVO_BADGE_KEY, 'true');
       } catch (_) {}
     }
   };
@@ -84,10 +99,12 @@ export default function Sidebar() {
     if (router.pathname === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
+      setShowNovoBadge(false);
       completeStep(1);
       try {
         localStorage.setItem(SPOTLIGHT_KEY, 'true');
         localStorage.setItem(ARROW_KEY, 'true');
+        localStorage.setItem(NOVO_BADGE_KEY, 'true');
       } catch (_) {}
     }
   }, [router.pathname, completeStep]);
@@ -121,6 +138,7 @@ export default function Sidebar() {
             const isCurrentOnboardingStep = !animationsDisabled && item.stepId === currentStep && !active;
             const isSpotlit = showSpotlight && item.stepId === 1 && !active && !animationsDisabled;
             const isArrowTarget = showArrowPointer && item.stepId === 1 && !active && !animationsDisabled;
+            const isNovoBadgeTarget = item.dynamicBadge === 'novo' && showNovoBadge && !active;
 
             return (
               <Link
@@ -141,12 +159,20 @@ export default function Sidebar() {
                 <Icon size={16} className={cn('shrink-0', active ? 'text-white' : 'text-[#94A3B8] group-hover:text-white')} />
                 {!collapsed && <span className="truncate">{item.label}</span>}
                 
+                {/* Standard Badge */}
                 {!collapsed && item.badge && (
                   <span className={cn(
                     'ml-auto text-[9px] px-1.5 py-0.2 rounded font-bold uppercase',
                     active ? 'bg-white/20 text-white' : 'bg-[#6366F1]/20 text-[#6366F1]'
                   )}>
                     {item.badge}
+                  </span>
+                )}
+
+                {/* NOVO Badge - Gold (#fbbf24) */}
+                {!collapsed && isNovoBadgeTarget && (
+                  <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#F59E0B]/20 text-[#FBBF24] border border-[#FBBF24]/40 shadow-[0_0_10px_rgba(251,191,36,0.3)] animate-pulse flex items-center gap-0.5">
+                    ✨ NOVO
                   </span>
                 )}
 
@@ -170,6 +196,7 @@ export default function Sidebar() {
           const Icon = item.icon;
           const isSpotlit = showSpotlight && item.stepId === 1 && !active && !animationsDisabled;
           const isArrowTarget = showArrowPointer && item.stepId === 1 && !active && !animationsDisabled;
+          const isNovoBadgeTarget = item.dynamicBadge === 'novo' && showNovoBadge && !active;
 
           return (
             <Link
@@ -185,6 +212,9 @@ export default function Sidebar() {
             >
               <Icon size={18} />
               <span>{item.label.split(' ')[0]}</span>
+              {isNovoBadgeTarget && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#FBBF24] shadow-[0_0_8px_#FBBF24] animate-ping" />
+              )}
               {isArrowTarget && (
                 <span className="absolute -top-6 bg-[#7C3AED] text-white text-[9px] px-1.5 py-0.5 rounded font-bold animate-bounce shadow">
                   ⚙️
@@ -218,6 +248,7 @@ export default function Sidebar() {
     </>
   );
 }
+
 
 
 
