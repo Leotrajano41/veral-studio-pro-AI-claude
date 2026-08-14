@@ -161,6 +161,11 @@ export default function SettingsPage() {
     toast.success('🔥 Limpeza completa de cache realizada!');
   };
 
+  const essentialKeys = ['openai', 'gemini', 'openrouter', 'assembly', 'pixabay'];
+  const validEssentialCount = apiKeys.filter(k => essentialKeys.includes(k.key) && k.status === 'valid').length;
+  const remainingCount = Math.max(0, 5 - validEssentialCount);
+  const isEssentialComplete = validEssentialCount >= 5;
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-6">
@@ -271,14 +276,80 @@ export default function SettingsPage() {
         {/* ── ABA 3: API KEYS ── */}
         {activeTab === 'keys' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-txt-secondary">
-                ⚠️ <strong className="text-txt-primary">Segurança:</strong> As chaves são criptografadas em AES-256 no banco e mascaradas na interface.
-              </p>
-              <Button variant="secondary" size="sm" onClick={handleUpdateFromServer}>
-                <RefreshCw size={14} /> 🔄 Atualizar do Servidor
-              </Button>
-            </div>
+            {/* Summary Checklist Banner (Prompt 4 - Item 2) */}
+            <div className="p-4 rounded-card border border-border bg-bg-secondary space-y-3 shadow-card">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🎯</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-txt-primary flex items-center gap-2">
+                      Resumo do Setup de APIs
+                      <span
+                        className={cn(
+                          'text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase border',
+                          isEssentialComplete
+                            ? 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40'
+                            : 'bg-[#F59E0B]/20 text-[#FBBF24] border-[#FBBF24]/40'
+                        )}
+                      >
+                        {isEssentialComplete ? '✓ Setup 100% Concluído' : `Pendente (${validEssentialCount}/5)`}
+                      </span>
+                    </h3>
+                    <p className="text-xs text-txt-secondary mt-0.5">
+                      {isEssentialComplete
+                        ? '🎉 Todas as 5 APIs essenciais foram salvas e validadas com sucesso!'
+                        : remainingCount === 1
+                          ? 'Falta 1 API obrigatória para concluir o setup inicial.'
+                          : `Faltam ${remainingCount} de 5 APIs essenciais para o setup completo.`}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 bg-bg-tertiary px-3.5 py-1.5 rounded-lg border border-border">
+                  <span className="text-xs font-mono font-bold text-txt-primary">{validEssentialCount} / 5</span>
+                  <div className="w-16 h-2 bg-bg-secondary rounded-full overflow-hidden border border-border">
+                    <div
+                      className={cn(
+                        'h-full bg-gradient-to-r transition-all duration-500',
+                        isEssentialComplete ? 'from-[#10B981] to-[#34D399]' : 'from-[#F59E0B] to-[#FBBF24]'
+                      )}
+                      style={{ width: `${(validEssentialCount / 5) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+                {/* 5 Essential APIs Micro Checklist Pills */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
+                  {essentialKeys.map(key => {
+                    const item = apiKeys.find(k => k.key === key);
+                    const isValid = item?.status === 'valid';
+                    return (
+                      <div
+                        key={key}
+                        className={cn(
+                          'p-2 rounded-lg border text-[11px] font-semibold flex items-center justify-between transition',
+                          isValid
+                            ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
+                            : 'bg-bg-tertiary/40 border-border text-txt-secondary'
+                        )}
+                      >
+                        <span className="truncate">{item?.label.split(' ')[0]}</span>
+                        <span className="font-bold text-[10px]">{isValid ? '✓' : '⏳'}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-txt-secondary">
+                  ⚠️ <strong className="text-txt-primary">Segurança:</strong> As chaves são criptografadas em AES-256 no banco e mascaradas na interface.
+                </p>
+                <Button variant="secondary" size="sm" onClick={handleUpdateFromServer}>
+                  <RefreshCw size={14} /> 🔄 Atualizar do Servidor
+                </Button>
+              </div>
 
             <div className="space-y-3">
               {apiKeys.map(item => {
