@@ -41,27 +41,31 @@ export default function Sidebar() {
   const [showArrowPointer, setShowArrowPointer] = useState(false);
   const [showNovoBadge, setShowNovoBadge] = useState(true);
   const [apiCount, setApiCount] = useState(1);
+  const [hasApiError, setHasApiError] = useState(false);
 
-  const { currentStep, step1Completed, animationsDisabled, completeStep } = useOnboarding();
-
-  // Sync API count from localStorage
-  const syncApiCount = () => {
+  // Sync API count & Error state from localStorage
+  const syncApiState = () => {
     if (typeof window === 'undefined') return;
     try {
       const stored = localStorage.getItem(API_COUNT_KEY);
       if (stored !== null) {
         setApiCount(parseInt(stored, 10));
       } else {
-        // Default to 1/5 APIs configured initially
         setApiCount(1);
       }
+      const err = localStorage.getItem('vsp_api_has_error') === 'true';
+      setHasApiError(err);
     } catch (_) {}
   };
 
   useEffect(() => {
-    syncApiCount();
-    window.addEventListener('vsp_api_count_change', syncApiCount);
-    return () => window.removeEventListener('vsp_api_count_change', syncApiCount);
+    syncApiState();
+    window.addEventListener('vsp_api_count_change', syncApiState);
+    window.addEventListener('vsp_api_error_change', syncApiState);
+    return () => {
+      window.removeEventListener('vsp_api_count_change', syncApiState);
+      window.removeEventListener('vsp_api_error_change', syncApiState);
+    };
   }, []);
 
   // Check badge_novo_visto in localStorage
@@ -181,25 +185,39 @@ export default function Sidebar() {
                 <Icon size={16} className={cn('shrink-0', active ? 'text-white' : 'text-[#94A3B8] group-hover:text-white')} />
                 {!collapsed && <span className="truncate">{item.label}</span>}
                 
-                {/* Standard Badge */}
+                {/* Standard Badge (HOT, 42 P) with title tooltip for HOT */}
                 {!collapsed && item.badge && !isNovoBadgeTarget && (
-                  <span className={cn(
-                    'ml-auto text-[9px] px-1.5 py-0.2 rounded font-bold uppercase',
-                    active ? 'bg-white/20 text-white' : 'bg-[#6366F1]/20 text-[#6366F1]'
-                  )}>
+                  <span
+                    title={item.badge === 'HOT' ? 'HOT — Comece aqui após setup' : undefined}
+                    className={cn(
+                      'ml-auto text-[9px] px-1.5 py-0.2 rounded font-bold uppercase transition',
+                      active ? 'bg-white/20 text-white' : 'bg-[#6366F1]/20 text-[#6366F1]',
+                      item.badge === 'HOT' && 'hover:bg-[#EF4444]/20 hover:text-[#EF4444]'
+                    )}
+                  >
                     {item.badge}
                   </span>
                 )}
 
+                {/* BADGE DE NOTIFICAÇÃO - Erro ou Aviso (⚠️ Erro em Vermelho #ef4444) */}
+                {!collapsed && item.href === '/settings' && hasApiError && !active && (
+                  <span
+                    title="API com erro de conexão — Clique para corrigir nas Configurações"
+                    className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40 shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse flex items-center gap-0.5 cursor-pointer"
+                  >
+                    ⚠️ Erro
+                  </span>
+                )}
+
                 {/* NOVO Badge - Gold (#fbbf24) */}
-                {!collapsed && isNovoBadgeTarget && (
+                {!collapsed && isNovoBadgeTarget && !hasApiError && (
                   <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#F59E0B]/20 text-[#FBBF24] border border-[#FBBF24]/40 shadow-[0_0_10px_rgba(251,191,36,0.3)] animate-pulse flex items-center gap-0.5">
                     ✨ NOVO
                   </span>
                 )}
 
                 {/* API Progress Badge (Red 0-1, Orange 2-3, Green 4-5 / COMPLETO) */}
-                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && (() => {
+                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && !hasApiError && (() => {
                   const isComplete = apiCount >= 5;
                   const badgeStyle = isComplete
                     ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 shadow-[0_0_8px_rgba(16,185,129,0.25)] font-extrabold'
