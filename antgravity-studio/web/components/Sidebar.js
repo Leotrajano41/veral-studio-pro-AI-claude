@@ -8,11 +8,12 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import useOnboarding from '../hooks/useOnboarding';
+import useBadges from '../hooks/useBadges';
+import Badge from './Badge';
+import ProgressBar from './ProgressBar';
 
 const SPOTLIGHT_KEY = 'vsp_sidebar_spotlight_seen';
 const ARROW_KEY = 'vsp_sidebar_arrow_clicked';
-const NOVO_BADGE_KEY = 'badge_novo_visto';
-const API_COUNT_KEY = 'vsp_configured_apis_count';
 const WIZARD_KEY = 'vsp_wizard_completed';
 
 const navItems = [
@@ -39,45 +40,11 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [showArrowPointer, setShowArrowPointer] = useState(false);
-  const [showNovoBadge, setShowNovoBadge] = useState(true);
-  const [apiCount, setApiCount] = useState(1);
-  const [hasApiError, setHasApiError] = useState(false);
 
-  // Sync API count & Error state from localStorage
-  const syncApiState = () => {
-    if (typeof window === 'undefined') return;
-    try {
-      const stored = localStorage.getItem(API_COUNT_KEY);
-      if (stored !== null) {
-        setApiCount(parseInt(stored, 10));
-      } else {
-        setApiCount(1);
-      }
-      const err = localStorage.getItem('vsp_api_has_error') === 'true';
-      setHasApiError(err);
-    } catch (_) {}
-  };
+  const { currentStep, step1Completed, animationsDisabled, completeStep } = useOnboarding();
+  const { configuredCount, hasError, novoBadgeSeen, markNovoSeen } = useBadges();
 
-  useEffect(() => {
-    syncApiState();
-    window.addEventListener('vsp_api_count_change', syncApiState);
-    window.addEventListener('vsp_api_error_change', syncApiState);
-    return () => {
-      window.removeEventListener('vsp_api_count_change', syncApiState);
-      window.removeEventListener('vsp_api_error_change', syncApiState);
-    };
-  }, []);
-
-  // Check badge_novo_visto in localStorage
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const seen = localStorage.getItem(NOVO_BADGE_KEY) === 'true';
-    if (seen || router.pathname === '/settings') {
-      setShowNovoBadge(false);
-    } else {
-      setShowNovoBadge(true);
-    }
-  }, [router.pathname]);
+  const showNovoBadge = !novoBadgeSeen && router.pathname !== '/settings';
 
   // Activate spotlight and arrow pointer for first-time users
   useEffect(() => {
@@ -112,11 +79,10 @@ export default function Sidebar() {
     if (item.href === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
-      setShowNovoBadge(false);
+      markNovoSeen();
       try {
         localStorage.setItem(SPOTLIGHT_KEY, 'true');
         localStorage.setItem(ARROW_KEY, 'true');
-        localStorage.setItem(NOVO_BADGE_KEY, 'true');
       } catch (_) {}
     }
   };
@@ -125,15 +91,14 @@ export default function Sidebar() {
     if (router.pathname === '/settings') {
       setShowSpotlight(false);
       setShowArrowPointer(false);
-      setShowNovoBadge(false);
+      markNovoSeen();
       completeStep(1);
       try {
         localStorage.setItem(SPOTLIGHT_KEY, 'true');
         localStorage.setItem(ARROW_KEY, 'true');
-        localStorage.setItem(NOVO_BADGE_KEY, 'true');
       } catch (_) {}
     }
-  }, [router.pathname, completeStep]);
+  }, [router.pathname, completeStep, markNovoSeen]);
 
   return (
     <>
@@ -200,51 +165,31 @@ export default function Sidebar() {
                 )}
 
                 {/* BADGE DE NOTIFICAÇÃO - Erro ou Aviso (⚠️ Erro em Vermelho #ef4444) */}
-                {!collapsed && item.href === '/settings' && hasApiError && !active && (
-                  <span
-                    title="API com erro de conexão — Clique para corrigir nas Configurações"
-                    className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40 shadow-[0_0_10px_rgba(239,68,68,0.3)] animate-pulse flex items-center gap-0.5 cursor-pointer"
-                  >
+                {!collapsed && item.href === '/settings' && hasError && !active && (
+                  <Badge color="red" tooltip="API com erro de conexão — Clique para corrigir nas Configurações" className="ml-auto">
                     ⚠️ Erro
-                  </span>
+                  </Badge>
                 )}
 
-                {/* NOVO Badge - Gold (#fbbf24) */}
-                {!collapsed && isNovoBadgeTarget && !hasApiError && (
-                  <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#F59E0B]/20 text-[#FBBF24] border border-[#FBBF24]/40 shadow-[0_0_10px_rgba(251,191,36,0.3)] animate-pulse flex items-center gap-0.5">
+                {/* NOVO Badge - Purple (#7c3aed) / Gold (#fbbf24) */}
+                {!collapsed && isNovoBadgeTarget && !hasError && (
+                  <Badge color="purple" tooltip="Novo módulo de configurações disponível" className="ml-auto">
                     ✨ NOVO
-                  </span>
+                  </Badge>
                 )}
 
-                {/* API Progress Badge (Red 0-1, Orange 2-3, Green 4-5 / COMPLETO) */}
-                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && !hasApiError && (() => {
-                  const isComplete = apiCount >= 5;
-                  const badgeStyle = isComplete
-                    ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 shadow-[0_0_8px_rgba(16,185,129,0.25)] font-extrabold'
-                    : apiCount >= 4
-                      ? 'bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/40 font-bold'
-                      : apiCount >= 2
-                        ? 'bg-[#f97316]/20 text-[#fb923c] border border-[#f97316]/40 font-bold'
-                        : 'bg-[#ef4444]/20 text-[#f87171] border border-[#ef4444]/40 font-bold';
-
-                  const barGradient = isComplete || apiCount >= 4
-                    ? 'from-[#10b981] to-[#34d399]'
-                    : apiCount >= 2
-                      ? 'from-[#f97316] to-[#fb923c]'
-                      : 'from-[#ef4444] to-[#f87171]';
+                {/* API Progress Badge (0-1 Red, 2-3 Yellow, 4-5 Green / COMPLETO) */}
+                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && !hasError && (() => {
+                  const isComplete = configuredCount >= 5;
+                  const badgeColor = isComplete || configuredCount >= 4 ? 'green' : configuredCount >= 2 ? 'yellow' : 'red';
+                  const badgeText = isComplete ? '✅ COMPLETO' : `${configuredCount}/5 APIs`;
 
                   return (
                     <div className="ml-auto flex flex-col items-end gap-0.5 shrink-0 cursor-pointer" title="Clique para gerenciar suas chaves de API">
-                      <span className={cn('text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors duration-300', badgeStyle)}>
-                        {isComplete ? '✅ COMPLETO' : `${apiCount}/5 APIs`}
-                      </span>
-                      {/* Micro Progress Bar Chart */}
-                      <div className="w-10 h-1 bg-[#1E293B] rounded-full overflow-hidden border border-[#334155]">
-                        <div
-                          className={cn('h-full bg-gradient-to-r transition-all duration-500', barGradient)}
-                          style={{ width: `${(Math.min(apiCount, 5) / 5) * 100}%` }}
-                        />
-                      </div>
+                      <Badge color={badgeColor} tooltip={isComplete ? 'Todas as 5 APIs estão ativas e validadas' : `Setup em andamento: ${configuredCount}/5 APIs salvas`}>
+                        {badgeText}
+                      </Badge>
+                      <ProgressBar value={configuredCount} max={5} color={badgeColor} />
                     </div>
                   );
                 })()}

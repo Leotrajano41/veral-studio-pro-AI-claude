@@ -12,6 +12,7 @@ import {
   Save, AlertTriangle, Layers, Info, Check, HardDrive, Lock, RotateCcw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { cn } from '../lib/utils';
 
 // ────────────────────────────────────────────────────────────
 // Constants
