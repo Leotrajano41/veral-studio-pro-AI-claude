@@ -14,6 +14,7 @@ import {
 import toast from 'react-hot-toast';
 import { cn } from '../lib/utils';
 import SetupChecklist from '../components/SetupChecklist';
+import useOnboardingAnalytics from '../hooks/useOnboardingAnalytics';
 
 // ────────────────────────────────────────────────────────────
 // Constants
@@ -58,6 +59,7 @@ function validateKeyFormat(key, value) {
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('keys'); // 'backup' | 'licenca' | 'keys' | 'tts' | 'cache' | 'sobre'
   const { animationsDisabled, setAnimationsDisabled, resetOnboarding } = useOnboarding();
+  const { analytics, resetAnalytics } = useOnboardingAnalytics();
 
   // ABA 1 - BACKUP
   const fileInputRef = useRef(null);
@@ -530,6 +532,55 @@ export default function SettingsPage() {
                   <Button variant="secondary" size="sm" onClick={() => { resetOnboarding(); toast.success('🔄 Onboarding zerado!'); }}>
                     <RefreshCw size={14} /> Zerar Passos
                   </Button>
+                </div>
+              </div>
+
+              {/* Analytics Section (Prompt 5 - Item 15) */}
+              <div className="p-4 rounded-card border border-[#334155] bg-[#0F172A]/70 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📊</span>
+                    <h4 className="text-xs font-bold text-white">Analytics de Onboarding & Rastreamento</h4>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#7C3AED]/20 text-[#A855F7] font-mono border border-[#7C3AED]/40">
+                      Debug Log
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => { resetAnalytics(); toast.success('🧹 Métricas zeradas!'); }}
+                    className="text-[11px] text-[#64748B] hover:text-white transition"
+                  >
+                    Resetar Dados
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="p-2.5 rounded-lg bg-[#1E293B] border border-[#334155]">
+                    <p className="text-[10px] text-[#94A3B8]">Conclusões Wizard</p>
+                    <p className="text-sm font-extrabold text-white font-mono mt-0.5">
+                      {analytics.wizard_completions || 0} / {analytics.wizard_starts || 1}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[#1E293B] border border-[#334155]">
+                    <p className="text-[10px] text-[#94A3B8]">Setups 5/5 Completos</p>
+                    <p className="text-sm font-extrabold text-[#10B981] font-mono mt-0.5">
+                      {analytics.setup_completed_count || 0}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[#1E293B] border border-[#334155]">
+                    <p className="text-[10px] text-[#94A3B8]">Features Desabilitadas</p>
+                    <p className="text-sm font-extrabold text-[#F59E0B] font-mono mt-0.5">
+                      {analytics.animations_disabled_count || 0}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-[#1E293B] border border-[#334155]">
+                    <p className="text-[10px] text-[#94A3B8]">Desistências (Dropoff)</p>
+                    <p className="text-sm font-extrabold text-[#EF4444] font-mono mt-0.5">
+                      {Object.values(analytics.wizard_dropoffs || {}).reduce((a, b) => a + b, 0)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
