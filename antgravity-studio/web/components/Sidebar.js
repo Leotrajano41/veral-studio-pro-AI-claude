@@ -12,6 +12,7 @@ import useOnboarding from '../hooks/useOnboarding';
 const SPOTLIGHT_KEY = 'vsp_sidebar_spotlight_seen';
 const ARROW_KEY = 'vsp_sidebar_arrow_clicked';
 const NOVO_BADGE_KEY = 'badge_novo_visto';
+const API_COUNT_KEY = 'vsp_configured_apis_count';
 const WIZARD_KEY = 'vsp_wizard_completed';
 
 const navItems = [
@@ -39,8 +40,29 @@ export default function Sidebar() {
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [showArrowPointer, setShowArrowPointer] = useState(false);
   const [showNovoBadge, setShowNovoBadge] = useState(true);
+  const [apiCount, setApiCount] = useState(1);
 
   const { currentStep, step1Completed, animationsDisabled, completeStep } = useOnboarding();
+
+  // Sync API count from localStorage
+  const syncApiCount = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = localStorage.getItem(API_COUNT_KEY);
+      if (stored !== null) {
+        setApiCount(parseInt(stored, 10));
+      } else {
+        // Default to 1/5 APIs configured initially
+        setApiCount(1);
+      }
+    } catch (_) {}
+  };
+
+  useEffect(() => {
+    syncApiCount();
+    window.addEventListener('vsp_api_count_change', syncApiCount);
+    return () => window.removeEventListener('vsp_api_count_change', syncApiCount);
+  }, []);
 
   // Check badge_novo_visto in localStorage
   useEffect(() => {
@@ -160,7 +182,7 @@ export default function Sidebar() {
                 {!collapsed && <span className="truncate">{item.label}</span>}
                 
                 {/* Standard Badge */}
-                {!collapsed && item.badge && (
+                {!collapsed && item.badge && !isNovoBadgeTarget && (
                   <span className={cn(
                     'ml-auto text-[9px] px-1.5 py-0.2 rounded font-bold uppercase',
                     active ? 'bg-white/20 text-white' : 'bg-[#6366F1]/20 text-[#6366F1]'
@@ -174,6 +196,27 @@ export default function Sidebar() {
                   <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full font-extrabold uppercase bg-[#F59E0B]/20 text-[#FBBF24] border border-[#FBBF24]/40 shadow-[0_0_10px_rgba(251,191,36,0.3)] animate-pulse flex items-center gap-0.5">
                     ✨ NOVO
                   </span>
+                )}
+
+                {/* API Progress Badge (1/5 APIs com Bar Chart) - Shown when NOVO badge is not active */}
+                {!collapsed && item.href === '/settings' && !isNovoBadgeTarget && (
+                  <div className="ml-auto flex flex-col items-end gap-0.5 shrink-0">
+                    <span className={cn(
+                      'text-[9px] px-1.5 py-0.2 rounded font-extrabold flex items-center gap-1',
+                      apiCount >= 5
+                        ? 'bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/40'
+                        : 'bg-[#6366F1]/20 text-[#818CF8] border border-[#6366F1]/30'
+                    )}>
+                      {apiCount}/5 APIs {apiCount >= 5 ? '✓' : ''}
+                    </span>
+                    {/* Micro Progress Bar Chart */}
+                    <div className="w-9 h-1 bg-[#1E293B] rounded-full overflow-hidden border border-[#334155]">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#22C55E] transition-all duration-500"
+                        style={{ width: `${(Math.min(apiCount, 5) / 5) * 100}%` }}
+                      />
+                    </div>
+                  </div>
                 )}
 
                 {/* Animated Arrow Pointing Tooltip Badge */}

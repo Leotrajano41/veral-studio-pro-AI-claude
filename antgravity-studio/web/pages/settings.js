@@ -96,7 +96,15 @@ export default function SettingsPage() {
     setShowSecretMap(prev => ({ ...prev, [key]: !prev[key] }));
   };
   const handleSaveApiKey = (serviceKey, newSecret) => {
-    setApiKeys(prev => prev.map(k => k.key === serviceKey ? { ...k, secret: newSecret, status: newSecret ? 'valid' : 'not_set' } : k));
+    setApiKeys(prev => {
+      const updated = prev.map(k => k.key === serviceKey ? { ...k, secret: newSecret, status: newSecret ? 'valid' : 'not_set' } : k);
+      const validCount = updated.filter(k => k.status === 'valid').length;
+      try {
+        localStorage.setItem('vsp_configured_apis_count', Math.min(validCount, 5));
+        window.dispatchEvent(new Event('vsp_api_count_change'));
+      } catch (_) {}
+      return updated;
+    });
     toast.success(`Chave ${serviceKey.toUpperCase()} salva!`);
   };
   const handleUpdateFromServer = async () => {
