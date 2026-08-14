@@ -2,6 +2,7 @@ import Layout from '../components/Layout';
 import HeroSection from '../components/home/HeroSection';
 import FeaturesGrid from '../components/home/FeaturesGrid';
 import CTASection from '../components/home/CTASection';
+import GlobalStatusCard from '../components/home/GlobalStatusCard';
 import OnboardingTour from '../components/onboarding/OnboardingTour';
 import ProgressDotsWidget from '../components/onboarding/ProgressDotsWidget';
 import OnboardingAnimations from '../components/onboarding/OnboardingAnimations';
@@ -44,6 +45,9 @@ export default function Home() {
           </div>
         </div>
 
+        {/* INDICADOR DE STATUS GLOBAL */}
+        <GlobalStatusCard />
+
         {/* Progress Dots Animation Widget */}
         <ProgressDotsWidget />
 
@@ -57,6 +61,7 @@ export default function Home() {
     </Layout>
   );
 }
+
 
 
 
